@@ -1,0 +1,260 @@
+.detail-view-grid{
+    display: grid;
+    justify-content: center; 
+    grid-template-columns: auto 350px; 
+    grid-template-rows: auto auto; 
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+  }
+  
+  .detail-view-title-section{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 1;
+    margin-top: 50px;
+    margin-bottom: 10px;
+  }
+  
+  .detail-view-image-section{
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 2;
+    grid-row-end: 2;
+  }
+  
+  .detail-view-info-tab-section{
+    grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 2;
+    margin-left: 10px;
+  }
+  
+  
+  /* this is the grid containing the main and preview images in the detailed view */
+  /* media queries needed on this later (grid-template-columns) */
+  .detail-view-images-grid {
+    display: grid; 
+    grid-template-columns: repeat(6, 150px); 
+    grid-template-rows: repeat(5, 100px); 
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+  }
+  
+  /* Make "item1" start on row 1 column 1, and span auto rows and auto columns: */
+  .detail-view-preview-image{
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
+    grid-row-end: auto;
+  }
+  
+  .detail-view-main-image{
+    grid-column-start: 2;
+    grid-column-end: 6;
+    grid-row-start: 1;
+    grid-row-end: auto;
+  }
+  
+  /* Container needed to position the button. Adjust the width as needed */
+  .image-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    margin: 0;
+    flex-wrap: wrap;
+    position: relative;
+    width: 50%;
+    height: 50%;
+    margin-left: 2.5%
+  }
+  
+  /* Make the image responsive */
+  .image-preview-container img {
+    width: 100%;
+    height: 100%;
+    margin-top: 2px;
+    padding: 2px;
+  }
+  
+  /* Style the button overlays the entire image https://www.w3schools.com/howto/howto_css_image_overlay_icon.asp*/ 
+  .image-preview-container button {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .image-preview-border{
+    border-style: solid;
+    border-width: 3px;
+    border-color: #bdbdbd
+  }
+  
+  .detail-view-main-image{
+    max-width:750px;
+    max-height:750px;
+  }
+  
+  .painting-info-tab-container {
+    position: relative;
+    width: 100%;
+    height: 85%;
+    padding: 10px;
+    background-color: #f5f5f5;
+  }
+  
+  .painting-info-tab-container h4 {
+    margin-left: 20px;
+  }
+  
+  .painting-info-tab-container p {
+    margin-left: 20px;
+  }
+  
+  /* mid-size screen until i-pad */
+  @media only screen and (max-width: 1250px) and (min-width: 760px){
+  
+    .detail-view-grid{
+      display: grid;
+      justify-content: center; 
+      grid-template-columns: auto 200px; 
+      grid-template-rows: auto auto; 
+      grid-column-gap: 0px;
+      grid-row-gap: 0px; 
+      padding-left: 50px;
+    }
+  
+    .detail-view-images-grid {
+      display: grid; 
+      grid-template-columns: repeat(6, 100px); 
+      grid-template-rows: repeat(5, 100px); 
+      grid-column-gap: 0px;
+      grid-row-gap: 0px;
+    }
+  
+    .detail-view-main-image{
+      max-width:450px;
+    }
+  
+    .painting-info-tab-container {
+      position: relative;
+      width: 80%;
+      height: 100%;
+      padding: 2px;
+      background-color: #f5f5f5;
+    }
+  
+  }
+  
+  /* Media query for phones */
+  @media only screen and (max-width: 759px) and (min-width: 1px){
+  
+    .detail-view-grid{
+      display: grid;
+      justify-content: center; 
+      grid-template-columns: 330px; 
+      grid-template-rows: auto auto auto; 
+      grid-column-gap: 0px;
+      grid-row-gap: 0px; 
+      padding-left: 50px;
+    }
+  
+    .detail-view-title-section{
+      grid-column-start: 1;
+      grid-column-end: 3;
+      grid-row-start: 1;
+      grid-row-end: 1;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+    
+    .detail-view-image-section{
+      grid-column-start: 1;
+      grid-column-end: 3;
+      grid-row-start: 2;
+      grid-row-end: 2;
+    }
+    
+    .detail-view-info-tab-section{
+      grid-column-start: 1;
+      grid-column-end: 3;
+      grid-row-start: 3;
+      grid-row-end: 3;
+      margin-left: 10px;
+      padding-bottom: 5px;
+    }
+    
+    .detail-view-images-grid {
+      display: grid; 
+      grid-template-columns: 300px; 
+      grid-template-rows: 400px 100px; 
+      grid-column-gap: 0px;
+      grid-row-gap: 0px;
+    }
+    
+    .detail-view-preview-image{
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 2;
+      grid-row-end: 2;
+      display: flex;
+      flex-direction: row;
+    }
+    
+    .detail-view-main-image{
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 1;
+      grid-row-end: 2;
+    }
+    
+    /* Container needed to position the button. Adjust the width as needed */
+    .image-preview-container {
+      margin: 0;
+      position: relative;
+      width: 50%;
+      height: 50%;
+      margin-left: 2.5%
+    }
+    
+    /* Make the image responsive */
+    .image-preview-container img {
+      width: 100%;
+      height: 100%;
+      margin-top: 2px;
+      padding: 2px;
+    }
+    
+    /* Style the button overlays the entire image https://www.w3schools.com/howto/howto_css_image_overlay_icon.asp*/ 
+    .image-preview-container button {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      width: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+  
+    .detail-view-main-image{
+      max-width:300px;
+    }
+  
+    .painting-info-tab-container {
+      position: relative;
+      width: 80%;
+      height: 100%;
+      padding: 2px;
+      background-color: #f5f5f5;
+    }
+  
+  }

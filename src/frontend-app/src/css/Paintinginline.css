@@ -1,0 +1,19 @@
+.inline-container{
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    text-align: center;
+    margin: 5px;
+    flex-wrap: wrap;
+    position: relative;
+    width: 50%;
+    height: 50%;
+    margin-left: 2.5%;
+}
+
+
+.inline-main-image{
+    display:block;
+    max-width:275px;
+    margin-bottom: 10px;
+};
