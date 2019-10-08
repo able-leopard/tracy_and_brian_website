@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import "../css/PaintingPagination.css";
-import { max } from "moment";
 
 const PaginationNumbers = props => (
   <a
@@ -34,7 +33,7 @@ class PaintingPagination extends Component {
   };
 
   clickNextPage = (currentPage, onPageClick, numberOfPages, currentApiEndpoint) => {
-    const corePaginationEndpoint = currentApiEndpoint.concat('/?page=');
+    const corePaginationEndpoint = currentApiEndpoint.concat('page=');
     const nextPageApiUrl = corePaginationEndpoint.concat(currentPage + 1);
 
     this.state.currentPage !== numberOfPages
@@ -46,7 +45,7 @@ class PaintingPagination extends Component {
   };
 
   clickPrevPage = (currentPage, onPageClick, currentApiEndpoint) => {
-    const corePaginationEndpoint = currentApiEndpoint.concat('/?page=');
+    const corePaginationEndpoint = currentApiEndpoint.concat('page=');
     const nextPageApiUrl = corePaginationEndpoint.concat(currentPage - 1);
 
     this.state.currentPage !== 1
@@ -60,15 +59,15 @@ class PaintingPagination extends Component {
   render() {
     // console.log(this.state.currentPage);
 
-    const { totalItemsCount, onPageClick, currentApiEndpoint } = this.props;
-    const maxItemsPerPage = 10; //this has to be the same as class PaintingPageNumberPagination in views.py
+    const { totalItemsCount, onPageClick, currentApiEndpoint, maxItemsPerPage } = this.props;
+    
     const numberOfPages = totalItemsCount / maxItemsPerPage;
 
 
     // creating an array here where there are two key value pairs in each index.
 
     //pageNumber is the page number, apiUrl is the Django API link that gets the data from the backend 
-    const corePaginationEndpoint = currentApiEndpoint.concat('/?page=');
+    const corePaginationEndpoint = currentApiEndpoint.concat('page=');
     const allPageNumbersArray = [];
     for (let i = 1; i < numberOfPages + 1; i++) {
       allPageNumbersArray.push({

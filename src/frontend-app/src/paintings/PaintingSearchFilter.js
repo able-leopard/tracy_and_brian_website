@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import "../css/PaintingSearchFilter.css";
+
 
 class PaintingSearchFiler extends Component {
     
@@ -139,83 +141,116 @@ class PaintingSearchFiler extends Component {
 
         return ( 
             <div>
-                <div>
-                    Large
-                    <input type="checkbox"
-                        value="large|"
-                        name="sizeFilters"
-                        onClick={ (event) => this.filterQuerySize(currentApiEndpoint, loadPaintings, event)}
-                        />
-                    Medium
-                    <input  type="checkbox"
-                            value="medium|"
-                            name="sizeFilters"                      
-                            onClick={ (event) => this.filterQuerySize(currentApiEndpoint, loadPaintings, event)}
+                <div className="filter-option">
+                    <div className="filter-item">
+                        SIZE
+                    </div>
+                    <div className="filter-item">
+                        <input  type="checkbox"
+                                value="large|"
+                                name="sizeFilters"
+                                onClick={ (event) => this.filterQuerySize(currentApiEndpoint, loadPaintings, event)}
                             />
-                    Small
-                    <input  type="checkbox"
-                            value="small|"
-                            name="sizeFilters"                                          
-                            onClick={ (event) => this.filterQuerySize(currentApiEndpoint, loadPaintings, event)}
-                            />
+                        Large
+                    </div>
+                    <div className="filter-item">
+                        <input  type="checkbox"
+                                value="medium|"
+                                name="sizeFilters"                      
+                                onClick={ (event) => this.filterQuerySize(currentApiEndpoint, loadPaintings, event)}
+                                />
+                        Medium
+                    </div>
+                    <div className="filter-item">
+                        <input  type="checkbox"
+                                value="small|"
+                                name="sizeFilters"                                          
+                                onClick={ (event) => this.filterQuerySize(currentApiEndpoint, loadPaintings, event)}
+                                />
+                        Small
+                    </div>
                 </div>
-                <div>
-                    Abstract
-                    <input type="checkbox"
-                        value="abstract|"
-                        name="styleFilters"
-                        onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                        />
-                    Animal
-                    <input  type="checkbox"
-                            value="animal|"
-                            name="styleFilters"                      
+                <div className="filter-option">
+                    <div className="filter-item">
+                        STYLE
+                    </div>
+                    <div className="filter-item">
+                        <input type="checkbox"
+                            value="abstract|"
+                            name="styleFilters"
                             onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
                             />
-                    Landscape
-                    <input  type="checkbox"
-                            value="landscape|"
-                            name="styleFilters"                                          
-                            onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                            />
-                    Nature
-                    <input  type="checkbox"
-                            value="nature|"
-                            name="styleFilters"                                          
-                            onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                            />
-                    People
-                    <input  type="checkbox"
-                            value="people|"
-                            name="styleFilters"                                          
-                            onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                            />
-                    Portrait
-                    <input  type="checkbox"
-                            value="portrait|"
-                            name="styleFilters"                                          
-                            onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                            />
+                        Abstract
+                    </div>
+                    <div className="filter-item">
+                        <input  type="checkbox"
+                                value="animal|"
+                                name="styleFilters"                      
+                                onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
+                                />
+                        Animal
+                    </div>
+                    <div className="filter-item">
+                        <input  type="checkbox"
+                                value="landscape|"
+                                name="styleFilters"                                          
+                                onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
+                                />
+                        Landscape
+                    </div>
+                    <div className="filter-item">
+                        <input  type="checkbox"
+                                value="nature|"
+                                name="styleFilters"                                          
+                                onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
+                                />
+                        Nature
+                    </div>
+                    <div className="filter-item">
+                        <input  type="checkbox"
+                                value="people|"
+                                name="styleFilters"                                          
+                                onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
+                                />
+                        People
+                    </div>
+                    <div className="filter-item">
+                        <input  type="checkbox"
+                                value="portrait|"
+                                name="styleFilters"                                          
+                                onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
+                                />
+                        Portrait
+                    </div>
                 </div>
-                <div>
-                    Brian
-                    <input type="checkbox"
-                        value="Brian|"
-                        name="artistFilters"
-                        onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
-                        />
-                    Tracy
-                    <input  type="checkbox"
+                <div className="filter-option">
+                    <div className="filter-item">
+                        ARTIST
+                    </div>
+                    <div className="filter-item">
+                        <input type="checkbox"
+                                value="Brian|"
+                                name="artistFilters"
+                                onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
+                                />
+                        Brian
+                    </div>
+                    <div className="filter-item">
+                        <input  type="checkbox"
                             value="Tracy|"
                             name="artistFilters"                      
                             onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
                             />
-                    Alex
-                    <input  type="checkbox"
-                            value="Alex|"
-                            name="artistFilters"                                          
-                            onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
-                            />
+                        Tracy
+                    </div>
+                    <div className="filter-item">
+                        <input  type="checkbox"
+                                value="Alex|"
+                                name="artistFilters"                                          
+                                onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
+                                />
+                        Alex
+                    </div>
                 </div>
             </div>
          );

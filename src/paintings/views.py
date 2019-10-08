@@ -9,7 +9,7 @@ from .permissions import IsOwnerOrReadOnly
 from .serializers import PaintingSerializer
 
 class PaintingPageNumberPagination(pagination.PageNumberPagination):
-    page_size = 10 #remember to also change const maxItemsPerPage in PaintingPagination.js if you change this
+    page_size = 20 #remember to also change this.state.maxItemsPerPage in PaintingList.js if you change this
     page_size_query_param = 'size'
     max_page_size = 20
 

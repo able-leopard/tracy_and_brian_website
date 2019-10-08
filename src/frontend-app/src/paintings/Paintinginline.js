@@ -7,6 +7,10 @@ import '../css/Paintinginline.css'
 
 class PaintingInline extends Component {
     
+    constructor(props){
+        super(props)
+    };
+
     render() { 
     
         const {paintingItem} = this.props

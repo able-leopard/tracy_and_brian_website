@@ -1,0 +1,50 @@
+.list-view{
+    margin-top: 20px;
+}
+
+.list-view-body{
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.list-view-body-filter-section{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 5;
+}
+
+.list-view-body-gallery-section{
+    grid-column-start: 3;
+    grid-column-end: 6;
+    grid-row-start: 1;
+    grid-row-end: 5;
+}
+
+  /* 
+  mid-size screen until i-pad 
+  the ipad size really starts at 1250px but I started at 1600px to make everything fit
+  */
+  @media only screen and (max-width: 1600px) and (min-width: 760px){
+
+    .list-view-body-filter-section > h4{
+        font-size: 15px;
+    }
+    
+}
+
+
+  /* Media query for phones */
+  @media only screen and (max-width: 759px) and (min-width: 1px){
+    
+    .list-view-body-filter-section > h4{
+        font-size: 15px;
+    }
+    
+    .list-view-body-gallery-section > div{
+        align-content: left;
+    }
+}

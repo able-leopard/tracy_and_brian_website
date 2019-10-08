@@ -3,10 +3,11 @@ import "whatwg-fetch";
 import cookie from "react-cookies";
 
 import { Link } from "react-router-dom";
-import PaintingInline from "./Paintinginline";
 import PaintingPagination from "./PaintingPagination";
 import PaintingSearchFilter from "./PaintingSearchFilter";
+import PaintingGallery from "./PaintingGallery";
 
+import '../css/PaintingList.css'
 
 class PaintingList extends Component {
   constructor(props) {
@@ -18,7 +19,8 @@ class PaintingList extends Component {
       author: false,
       totalItemsCount: 0,      //this is the count for the total number of results coming from the Django REST API   
       totalPages: null,
-      currentApiEndpoint: `/api/paintings/?`,   
+      currentApiEndpoint: `/api/paintings/?`,
+      maxItemsPerPage: 20,   //this has to be the same as class PaintingPageNumberPagination in views.py
     };
   }
 
@@ -109,19 +111,14 @@ class PaintingList extends Component {
     });
   };
 
-
   render() {
-    const { paintings, author, totalItemsCount, currentApiEndpoint} = this.state;
+    const { paintings, author, totalItemsCount, currentApiEndpoint, maxItemsPerPage} = this.state;
+    console.log(paintings.length)
+    console.log(totalItemsCount)
 
-    this.state
     return (
-      <div>
+      <div className={"list-view"}>
         <h1>Original Paintings</h1>
-        <h4>Total Results: {totalItemsCount}</h4>
-
-        <PaintingSearchFilter currentApiEndpoint={currentApiEndpoint}
-                              loadPaintings={this.loadPaintings}/>
-
         {author === true ? (
           <Link
             className="mr-2"
@@ -136,22 +133,41 @@ class PaintingList extends Component {
         ) : (
           ""
         )}
-        {paintings.length > 0 ? (
-          
-            paintings.map((paintingItem, index) => {
-            return <PaintingInline paintingItem={paintingItem}/>;
-          })
-        ) : (
-          <p>No Paintings Found</p>
-        )}
-      
-        <PaintingPagination totalItemsCount={totalItemsCount}
-                            onPageClick={this.onPageClick}
-                            currentApiEndpoint={currentApiEndpoint}      
-          />
+        <div className={"list-view-body"}>
+          <div className={"list-view-body-filter-section"}>
+            <h4>Total Results: {totalItemsCount}</h4>
+
+            <PaintingSearchFilter currentApiEndpoint={currentApiEndpoint}
+                                  loadPaintings={this.loadPaintings}/>
+          </div>
+          <div className={"list-view-body-gallery-section"}>
+            <PaintingGallery paintings={paintings}/>
+            <br/>
+
+            <div>
+              <PaintingPagination totalItemsCount={totalItemsCount}
+                                  onPageClick={this.onPageClick}
+                                  currentApiEndpoint={currentApiEndpoint}
+                                  maxItemsPerPage={maxItemsPerPage}      
+                />
+            </div>
+  
+          </div>
+        </div>
       </div>
     );
   }
 }
 
 export default PaintingList;
+
+
+// { paintings.length > maxItemsPerPage ?
+//   <PaintingPagination totalItemsCount={totalItemsCount}
+//                       onPageClick={this.onPageClick}
+//                       currentApiEndpoint={currentApiEndpoint}
+//                       maxItemsPerPage={maxItemsPerPage}      
+//     /> : ""
+//   }
+
+
