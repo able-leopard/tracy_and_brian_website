@@ -22,7 +22,7 @@ class CartManager(models.Manager):
 
         #if the id doesn't exist then we'll create a brand new one and start that new session
         else:
-            cart_obj = Shoppingcart.objects.new_cart(user=request.user)
+            cart_obj = Cart.objects.new_cart(user=request.user)
             new_obj = True
             request.session['cart_id'] = cart_obj.id #this is the setter
 
@@ -36,15 +36,14 @@ class CartManager(models.Manager):
                 user_obj = user
         return self.model.objects.create(user=user_obj)
 
-class Shoppingcart(models.Model):
-    user            = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE) #null and blank are True because we want even people who don't have an account to be able to add to cart
+class Cart(models.Model):
     products        = models.ManyToManyField(Painting, blank=True) #blank=True because we want the ability to have an empty cart
     sub_total       = models.DecimalField(default=0.00, max_digits=100, decimal_places=2) #total of 100 items    
     total           = models.DecimalField(default=0.00, max_digits=100, decimal_places=2) #total of 100 items
     updated         = models.DateTimeField(auto_now=True) #to track when the cart was updated    
     timestamp       = models.DateTimeField(auto_now_add=True) #to track when the painting was added to the cart
 
-    objects = ShoppingcartManager()
+    objects = CartManager()
 
     def __str__(self):
         return str(self.id)
@@ -67,7 +66,7 @@ def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
                 instance.save()
                 
 #m2m_changed documentation: https://docs.djangoproject.com/en/2.2/ref/signals/#m2m-changed
-m2m_changed.connect(m2m_changed_cart_receiver, sender=Shoppingcart.products.through) #we need the through method for the m2m
+m2m_changed.connect(m2m_changed_cart_receiver, sender=Cart.products.through) #we need the through method for the m2m
 
 #django manytomany documentation:
 #https://docs.djangoproject.com/en/2.2/topics/db/examples/many_to_many/
@@ -80,4 +79,4 @@ def pre_save_cart_receiver(sender, instance, *args, **kwargs):
     else:
         instance.total = 0.00
 
-pre_save.connect(pre_save_cart_receiver, sender=Shoppingcart)
+pre_save.connect(pre_save_cart_receiver, sender=Cart)

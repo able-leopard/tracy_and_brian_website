@@ -21,11 +21,38 @@ class UserPublicSerializer(serializers.ModelSerializer):
 
 class PaintingPhotoSerializer(serializers.ModelSerializer):
     
+    title_name              = serializers.CharField(source='title', read_only=True)
+    photo_title_url         = serializers.HyperlinkedIdentityField(
+                                view_name='paintings-api:photos-title-list',
+                                read_only=True,
+                                lookup_field='title_id'
+                                )
+    photo_specific_url      = serializers.HyperlinkedIdentityField(
+                                    view_name='paintings-api:photos-specific-detail',
+                                    read_only=True,
+                                    lookup_field='id'
+                                    )
+    owner                   = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = PaintingPhoto
+        
         fields =[
+            'title',
             'src',
+            'title_name',
+            'photo_title_url',
+            'photo_specific_url',
+            'owner',
         ]
+
+    def get_owner(self, obj):
+
+        request = self.context['request']
+        if request.user.is_authenticated:
+            if obj.user == request.user:
+                return True
+        return False
 
 #becareful here, if anyone submits a POST with an empty title, it will result in the empty slug, (which will mess up the url lookup since the title is the slug in this case)
 #make title a required field in the actual interface, also remember to don't submit s POST with an empty title from the Django restframework directly
@@ -42,16 +69,15 @@ class PaintingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Painting
         fields = [
+            'id',
             'url',
             'user',
             'title',                    
-            'style', 
-            'medium',                           
+            'style',                          
             'description',                
             'size_measurements',
             'size_class',
             'artist',
-            'series',
             'price',
             'completed_year',                       
             'available',                                
@@ -70,14 +96,3 @@ class PaintingSerializer(serializers.ModelSerializer):
                 return True
         return False
 
-"""
-Not sure if the below is needed. Seems like the the Django REST nested documentation said to include this part:
-https://www.django-rest-framework.org/api-guide/relations/#nested-relationships
-"""
-    # def create(self, validated_data):
-    
-    #     photo_set_data = validated_data.pop('photos')
-    #     painting = Painting.objects.create(**validated_data)
-    #     for photo in photo_set_data:
-    #         PaintingPhoto.objects.create(painting=painting, **photo_set_data)
-    #     return painting

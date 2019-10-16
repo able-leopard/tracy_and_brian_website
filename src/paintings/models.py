@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save
 from .utils import unique_slug_generator
+import requests
 
 # NameField for always capitalizing the artist name when inputted
 # https://stackoverflow.com/questions/36330677/django-model-set-default-charfield-in-lowercase
@@ -30,19 +31,23 @@ class Painting(models.Model):
         ('landscape', 'landscape'),
         ('nature', 'nature'),
         ('people', 'people'),
-        ('portrait', 'portrait')
+        ('portrait', 'portrait'),
+        ('other', 'other')
+    )
+
+    ARTIST_CHOICES = (
+        ('brian', 'brian'),
+        ('tracy', 'tracy'),
     )
     
     user                        = models.ForeignKey(settings.AUTH_USER_MODEL, default="", on_delete=models.CASCADE)
     title                       = models.CharField(blank=False, null=False, default="", max_length=255)
     slug                        = models.SlugField(blank=True, null=True)
     style                       = models.CharField(blank=True, null=True, default="", max_length=255, choices=STYLE_CHOICES)     
-    medium                      = models.CharField(blank=True, null=True, default="", max_length=255)    
     description                 = models.TextField(blank=True, null=True, default="")
     size_measurements           = models.CharField(blank=True, null=True, default="", max_length=255) 
     size_class                  = models.CharField(blank=True, null=True, default="", max_length=255, choices=SIZE_CLASS_CHOICES) #this field might be invisible when display but will be used in filtering search later
-    artist                      = NameField(blank=True, null=True, default="", max_length=255)
-    series                      = models.CharField(blank=True, null=True, default="", max_length=255)
+    artist                      = models.CharField(blank=True, null=True, default="", max_length=255, choices=ARTIST_CHOICES)
     price                       = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=20)
     completed_year              = models.CharField(blank=True, null=True, default="", max_length=255)
     available                   = models.BooleanField(default=True)
@@ -68,6 +73,7 @@ pre_save.connect(pre_save_painting_receiver, sender=Painting)
 class PaintingPhoto(models.Model):
     title                       = models.ForeignKey(Painting, default="", related_name='srcs', on_delete=models.CASCADE)
     src                         = models.ImageField(upload_to='uploaded_paintings', default='default.jpg')
+    user                        = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
 
     class Meta:
         ordering = ["src"]
@@ -76,3 +82,4 @@ class PaintingPhoto(models.Model):
 
     def __str__(self):
         return str(self.title)
+

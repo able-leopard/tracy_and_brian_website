@@ -24,7 +24,8 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='react.html')),
     re_path(r'^paintings', TemplateView.as_view(template_name='react.html')),
     path('admin/', admin.site.urls),
-    path('api/paintings/', include('paintings.urls'))
+    path('api/paintings/', include('paintings.urls')),
+    path('api/cart/', include('cart.urls'))
 ]
 
 #remember to include this if you want to show images

@@ -222,6 +222,14 @@ class PaintingSearchFiler extends Component {
                                 />
                         Portrait
                     </div>
+                    <div className="filter-item">
+                    <input  type="checkbox"
+                            value="other|"
+                            name="styleFilters"                                          
+                            onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
+                            />
+                        Other
+                    </div>
                 </div>
                 <div className="filter-option">
                     <div className="filter-item">
@@ -229,7 +237,7 @@ class PaintingSearchFiler extends Component {
                     </div>
                     <div className="filter-item">
                         <input type="checkbox"
-                                value="Brian|"
+                                value="brian|"
                                 name="artistFilters"
                                 onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
                                 />
@@ -237,19 +245,11 @@ class PaintingSearchFiler extends Component {
                     </div>
                     <div className="filter-item">
                         <input  type="checkbox"
-                            value="Tracy|"
+                            value="tracy|"
                             name="artistFilters"                      
                             onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
                             />
                         Tracy
-                    </div>
-                    <div className="filter-item">
-                        <input  type="checkbox"
-                                value="Alex|"
-                                name="artistFilters"                                          
-                                onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
-                                />
-                        Alex
                     </div>
                 </div>
             </div>

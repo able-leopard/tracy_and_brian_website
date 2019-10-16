@@ -4,9 +4,9 @@ from rest_framework.response import Response
 from rest_framework import generics, permissions, pagination, status
 
 from django.db.models import Q
-from .models import Painting
+from .models import Painting, PaintingPhoto
 from .permissions import IsOwnerOrReadOnly
-from .serializers import PaintingSerializer
+from .serializers import PaintingSerializer, PaintingPhotoSerializer
 
 class PaintingPageNumberPagination(pagination.PageNumberPagination):
     page_size = 20 #remember to also change this.state.maxItemsPerPage in PaintingList.js if you change this
@@ -99,5 +99,65 @@ class PaintingListCreateAPIView(generics.ListCreateAPIView):
             queryList = queryList.filter(available = available)
 
         return queryList
-    
 
+
+class PaintingPhotosPageNumberPagination(pagination.PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'size'
+    max_page_size = 20
+
+    def get_paginated_response(self, data):
+        author  = False
+        user    = self.request.user
+        if user.is_authenticated:
+            author = True
+        context = {
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'count': self.page.paginator.count,
+            'author': author,
+            'results': data,
+        }
+        return Response(context)
+
+
+class PaintingPhotosListCreateAPIView(generics.ListCreateAPIView):
+    queryset            = PaintingPhoto.objects.all()
+    serializer_class    = PaintingPhotoSerializer
+    permission_classes  = [permissions.IsAuthenticatedOrReadOnly]
+    pagination_class    = PaintingPhotosPageNumberPagination
+
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+# Found the OR condition filtering here
+# https://stackoverflow.com/questions/37540275/django-rest-framework-filter-with-or-condition
+
+    def get_queryset(self):
+        # filter the queryset based on the filters applied
+        queryList = PaintingPhoto.objects.all()
+        
+        # title       = self.request.query_params.get('title', None)
+        # src         = self.request.query_params.get('src', None)
+
+        return queryList
+       
+class PaintingPhotosTitleListCreateAPIView(generics.ListCreateAPIView):
+    queryset            = PaintingPhoto.objects.all()
+    serializer_class    = PaintingPhotoSerializer
+    lookup_field        = 'title_id'
+    permission_classes  = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+            title_id = self.kwargs['title_id']
+            return PaintingPhoto.objects.filter(title_id=title_id)
+
+class PaintingPhotosSpecificDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset            = PaintingPhoto.objects.all()
+    serializer_class    = PaintingPhotoSerializer
+    lookup_field        = 'id'
+    permission_classes  = [IsOwnerOrReadOnly]

@@ -28,7 +28,7 @@ class PaintingDetail extends Component {
     //notice the endpoint is going to a relative request, (relative to where the final javascript built code will be)
     //note that because this is relative, when you render in localhost:3000 this may run into some issues
 
-    console.log(slug)
+    // console.log(slug)
 
     const endpoint = `/api/paintings/${slug}/`;
 
@@ -54,7 +54,7 @@ class PaintingDetail extends Component {
         return response.json();
       })
       .then(responseData => {
-        console.log(responseData);
+        // console.log(responseData);
         if (responseData.detail) {
           this.setState({
             doneLoading: true,
@@ -127,17 +127,6 @@ class PaintingDetail extends Component {
                                       />
                   </div>
                 </div>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
                 <br/>
                 <p>
                   {painting.owner === true ? (

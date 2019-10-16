@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PaintingForm from './PaintingForm'
+import PaintingPhotoForm from './PaintingPhotoForm'
 
 class PaintingCreate extends Component {
   
@@ -8,6 +9,7 @@ class PaintingCreate extends Component {
       <div>
         <h1>Create New Painting</h1>
         <PaintingForm />
+   
       </div>
      );
   }

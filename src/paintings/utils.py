@@ -3,16 +3,6 @@ import string
 from django.utils.text import slugify
 
 
-'''
-This code is from
-
-https://www.codingforentrepreneurs.com/blog/random-string-generator-in-python/
-https://www.codingforentrepreneurs.com/blog/a-unique-slug-generator-for-django/
-
-'''
-
-
-
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
