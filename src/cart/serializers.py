@@ -14,6 +14,7 @@ class CartSerializer(serializers.ModelSerializer):
         fields = [
             "products",
             "sub_total",
+            "shipping",
             "total",
             "updated",
             "timestamp",

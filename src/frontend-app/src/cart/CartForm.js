@@ -3,16 +3,19 @@ import "whatwg-fetch";
 import cookie from "react-cookies";
 import moment from "moment";
 
+
+
 class CartForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: null,
-      description: null,
-      publish: null
+      products: null,
+      "sub_total": null,
+      "total": null,
+      "updated": null,
+      "timestamp": null
     };
-    this.cartTitleRef = React.createRef();
-    this.cartDescriptionRef = React.createRef();
+    
   }
 
   createCart = (data) => {
@@ -37,13 +40,7 @@ class CartForm extends Component {
         .then(response => {
           return response.json();
         })
-        .then(responseData => {
-          console.log(responseData);
-          if (this.props.newPaintingItemCreated) {
-            this.props.newPaintingItemCreated(responseData);
-          }
-          this.clearForm()
-        })
+        this.clearForm()
         .catch(error => {
           console.log("error", error);
           alert("An error occured, please try again later.");
@@ -72,12 +69,6 @@ class CartForm extends Component {
       fetch(endpoint, lookupOptions)
         .then(response => {
           return response.json();
-        })
-        .then(responseData => {
-          console.log(responseData);
-          if (this.props.cartItemUpdated) {
-            this.props.cartItemUpdated(responseData);
-          }
         })
         .catch(error => {
           console.log("error", error);
@@ -115,18 +106,13 @@ class CartForm extends Component {
     this.paintingCreateForm.reset();
   };
 
-  // another way to clear the form
-  clearFormRefs() {
-    this.defaultState()
-    this.paintingTitleRef.current = "";
-    this.paintingDescriptionRef.current = "";
-  }
-
   defaultState = () => {
       this.setState({
-          title: null,
-          description: null,
-          publish: moment(new Date()).format("YYYY-MM-DD"), // this for automatically setting the date to today (good for like bpaintings etc. where you're showing the published date )
+        products: null,
+        "sub_total": null,
+        "total": null,
+        "updated": null,
+        "timestamp": null
       })
   }
 
@@ -136,7 +122,7 @@ class CartForm extends Component {
       this.setState({
         title: painting.title,
         description: painting.description,
-        publish: moment(new Date(painting.publish)).format("YYYY-MM-DD")
+
       });
     } else {
       this.defaultState()
@@ -145,48 +131,11 @@ class CartForm extends Component {
   }
 
   render() {
-    const { publish, title, description } = this.state;
-    const cancelClass = this.props.cart !== undefined ? "d-none" : ""
+    const { products, sub_total, total, updated, timestamp } = this.state;
+
     return (
       <form onSubmit={this.handleSubmit} ref={el => (this.paintingCreateForm = el)}>
-        <div className="form-group">
-          <label for="title">Painting title</label>
-          <input
-            type="text"
-            id="title"
-            ref={this.paintingTitleRef}
-            name="title"
-            value={title}
-            className="form-control"
-            placeholder="Painting title"
-            ref={this.paintingTitleRef}
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label for="description">Description</label>
-          <textarea
-            id="description"
-            ref={this.paintingDescriptionRef}
-            name="description"
-            value={description}
-            className="form-control"
-            placeholder="Painting description"
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label for="title">Painted Date</label>
-          <input
-            type="date"
-            id="publish"
-            name="publish"
-            className="form-control"
-            onChange={this.handleInputChange}
-            value={publish}
-            required="required"
-          />
-        </div>
+
         <button className="btn btn-primary">Save</button> 
         <button className={`btn btn-secondary`} onClick={this.clearForm}>
           Clear

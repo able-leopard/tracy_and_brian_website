@@ -125,22 +125,19 @@ class PaintingPhotosListCreateAPIView(generics.ListCreateAPIView):
     queryset            = PaintingPhoto.objects.all()
     serializer_class    = PaintingPhotoSerializer
     permission_classes  = [permissions.IsAuthenticatedOrReadOnly]
-    pagination_class    = PaintingPhotosPageNumberPagination
+    # pagination_class    = PaintingPhotosPageNumberPagination
 
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-# Found the OR condition filtering here
-# https://stackoverflow.com/questions/37540275/django-rest-framework-filter-with-or-condition
+    #returning distinct title_id value
+    #https://stackoverflow.com/questions/20582966/django-order-by-filter-with-distinct
 
     def get_queryset(self):
-        # filter the queryset based on the filters applied
-        queryList = PaintingPhoto.objects.all()
+        # filter the queryset if distinct values based on title_id
+        queryList = PaintingPhoto.objects.all().order_by('title_id').distinct('title_id')
         
-        # title       = self.request.query_params.get('title', None)
-        # src         = self.request.query_params.get('src', None)
-
         return queryList
        
 class PaintingPhotosTitleListCreateAPIView(generics.ListCreateAPIView):

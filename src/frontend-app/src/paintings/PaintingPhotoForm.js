@@ -10,7 +10,9 @@ class PaintingPhotoForm extends Component {
     super(props);
     this.state = {
       title: null,
-      src: null,  
+      src: null,
+      apiPaintingPhotosEndpoint: `/api/paintings/photos?`,
+      paintingPhotos: null,
     };
   }
   // Note that id in painting model matches title_id in the paintingphoto model 
@@ -31,17 +33,16 @@ class PaintingPhotoForm extends Component {
   For example: let file = event.target.files[0]
   Sending only the name like this won't do anything event.target.files[0].name 
 
-  TO REVIEW - MUST DO THIS
-  - formData vs json
-  - xmlHTTPrequest?: https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Sending_forms_through_JavaScript#Using_XMLHttpRequest_and_the_FormData_object
+  More on formData:
+  https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Sending_forms_through_JavaScript#Using_XMLHttpRequest_and_the_FormData_object
+
   - Understand fetch fully
   */
   
   createPainting = (data) => {
-    
-    console.log(data)
-    console.log(data.title)
-    console.log(data.src)
+
+    // console.log(data.title)
+    // console.log(data.src)
 
     const endpoint = "/api/paintings/photos"; //notice the endpoint is going to a relative request, (relative to where the final javascript built code will be)
     const csrfToken = cookie.load("csrftoken");
@@ -89,10 +90,8 @@ class PaintingPhotoForm extends Component {
         body: JSON.stringify(data),
         credentials: "include"
     };
-
-      // fetch documentation: https://github.github.io/fetch/
-      // more explaination on the Options argument: https://github.github.io/fetch/#options
-      fetch(endpoint, lookupOptions)
+  
+    fetch(endpoint, lookupOptions)
         .then(response => {
           return response.json();
         })
@@ -118,7 +117,7 @@ class PaintingPhotoForm extends Component {
 
   handleInputChange = event => {
     event.preventDefault();
-    console.log(event.target.name, event.target.value);
+    // console.log(event.target.name, event.target.value);
 
     this.setState({
       [event.target.name]: event.target.value
@@ -132,7 +131,6 @@ class PaintingPhotoForm extends Component {
     this.setState({
       src: file
     });
-
   };
 
   // clearing the form
@@ -145,7 +143,6 @@ class PaintingPhotoForm extends Component {
     this.defaultState();
   };
 
-
   defaultState = () => {
       this.setState({
           title: null, 
@@ -153,9 +150,46 @@ class PaintingPhotoForm extends Component {
       })
   }
   
+
+  loadUniqueTitleIds = (clickedEndpoint) => {
+   
+    let endpoint = this.state.apiPaintingPhotosEndpoint
+ 
+    if (clickedEndpoint !== undefined){
+        endpoint = clickedEndpoint
+    }
+
+    let lookupOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }; 
+    
+    const csrfToken = cookie.load("csrftoken");
+    if (csrfToken !== undefined) {
+      lookupOptions["credentials"] = "include";
+      lookupOptions["headers"]["X-CSRFToken"];
+    }
+    
+    fetch(endpoint, lookupOptions)
+      .then(response => {
+        return response.json();
+      })
+      .then(responseData => {
+        this.setState({
+          paintingPhotos: responseData,
+        });
+        // console.log(responseData);
+      })
+      .catch(error => {
+        console.log("error", error);
+      });
+  }
+
   componentDidMount() {
+    this.loadUniqueTitleIds()
     const { title_id } = this.props;
-    console.log(title_id)
 
     if (title_id !== undefined) {
       this.setState({
@@ -164,30 +198,43 @@ class PaintingPhotoForm extends Component {
     } else {
       this.defaultState()
     }
-
   }
 
   render() {
     // for the style options remember it has to match with the options in paintings model.py
     // right now the title_id goes in the title field of the PaintingPhoto model. Try to see if we can switch to slug later
 
+
     const { title_id } = this.props;
+    const {paintingPhotos} = this.state;
+    console.log(paintingPhotos)
+    // console.log(typeof(paintingPhotos))
 
     return (
       <form onSubmit={this.handleSubmit} ref={(el) => this.paintingCreateForm = el}>
-        <div>
+    
+       <div>
+
           <label for="title">Title ID</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={title_id}
-            className="form-control"
-            placeholder="title_id"
-            onChange={this.handleInputChange}
-            // required='required'
-          />
+          <select id="title"
+                  name="title"
+                  className=""
+                  onChange={this.handleInputChange}
+                  value={title_id}
+                  // required="required"
+                  >
+              <option value="">-</option>
+              {
+                    paintingPhotos !== null ? 
+                    paintingPhotos.map((anObjectMapped, index) => 
+                      <option value={anObjectMapped.title} >{anObjectMapped.title_name}</option>
+                      )
+                    : ""
+                  }
+          </select>
+       
         </div>
+
         <div>
           <label for="src">Photos</label>
           <input

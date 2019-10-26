@@ -46,10 +46,6 @@ class PaintingList extends Component {
   }
 
   loadPaintings = (clickedEndpoint) => {
-    // console.log(clickedEndpoint)
- 
-    //notice the endpoint is going to a relative request, (relative to where the final javascript built code will be)
-    //note that because this is relative, when you render in localhost:3000 this may run into some issues
 
     let endpoint = this.state.currentApiEndpoint
  
@@ -57,7 +53,6 @@ class PaintingList extends Component {
     if (clickedEndpoint !== undefined){
         endpoint = clickedEndpoint
     }
-
 
     // this goes into the options argument in fetch(url, options)
     let lookupOptions = {
@@ -69,20 +64,15 @@ class PaintingList extends Component {
     
     const csrfToken = cookie.load("csrftoken");
     if (csrfToken !== undefined) {
-      // this goes into the options argument in fetch(url, options)
       lookupOptions["credentials"] = "include";
       lookupOptions["headers"]["X-CSRFToken"];
     }
     
-    // fetch documentation: https://github.github.io/fetch/
-    // more explaination on the Options argument: https://github.github.io/fetch/#options
     fetch(endpoint, lookupOptions)
       .then(response => {
         return response.json();
       })
       .then(responseData => {
-
-        // console.log(responseData);
 
         this.setState({
           paintings: responseData.results,
@@ -113,8 +103,7 @@ class PaintingList extends Component {
 
   render() {
     const { paintings, author, totalItemsCount, currentApiEndpoint, maxItemsPerPage} = this.state;
-    console.log(paintings.length)
-    console.log(totalItemsCount)
+    console.log(paintings)
 
     return (
       <div className={"list-view"}>
@@ -160,14 +149,3 @@ class PaintingList extends Component {
 }
 
 export default PaintingList;
-
-
-// { paintings.length > maxItemsPerPage ?
-//   <PaintingPagination totalItemsCount={totalItemsCount}
-//                       onPageClick={this.onPageClick}
-//                       currentApiEndpoint={currentApiEndpoint}
-//                       maxItemsPerPage={maxItemsPerPage}      
-//     /> : ""
-//   }
-
-

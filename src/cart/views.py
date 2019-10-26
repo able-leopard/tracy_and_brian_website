@@ -15,7 +15,16 @@ class CartDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 class CartListCreateAPIView(generics.ListCreateAPIView):
     queryset            = Cart.objects.all()
     serializer_class    = CartSerializer
-    permission_classes  = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes  = [permissions.AllowAny]    
+    # permissions.AllowAny allows POST for users that are not logged in
+    # https://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy
+        
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save()
+
+    def get_queryset(self):
+        # filter the queryset based on the filters applied
+        queryList = Cart.objects.all()
+        
+        return queryList

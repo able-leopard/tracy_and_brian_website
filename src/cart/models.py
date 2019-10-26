@@ -38,8 +38,9 @@ class CartManager(models.Manager):
 
 class Cart(models.Model):
     products        = models.ManyToManyField(Painting, blank=True) #blank=True because we want the ability to have an empty cart
-    sub_total       = models.DecimalField(default=0.00, max_digits=100, decimal_places=2) #total of 100 items    
-    total           = models.DecimalField(default=0.00, max_digits=100, decimal_places=2) #total of 100 items
+    sub_total       = models.DecimalField(default=0.00, max_digits=100, decimal_places=2) 
+    shipping        = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)     
+    total           = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
     updated         = models.DateTimeField(auto_now=True) #to track when the cart was updated    
     timestamp       = models.DateTimeField(auto_now_add=True) #to track when the painting was added to the cart
 
@@ -60,7 +61,7 @@ def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
             
             #adding each painting to get the total price
             for x in products:
-                total += x.painting_price
+                total += x.price
             if instance.sub_total != total:
                 instance.sub_total = total
                 instance.save()
@@ -75,7 +76,7 @@ def pre_save_cart_receiver(sender, instance, *args, **kwargs):
 
     #only add the tax, shipping etc if sub_total is > 0. (replace +10 with actual tax/ shipping later)
     if instance.sub_total > 0:
-        instance.total = float(instance.sub_total) * 1.08 #instead of +10, play around to get the taxes and shipping rates later
+        instance.total = float(instance.sub_total) * 1 #instead of +10, play around to get the taxes and shipping rates later
     else:
         instance.total = 0.00
 

@@ -73,7 +73,7 @@ class PaintingSerializer(serializers.ModelSerializer):
             'url',
             'user',
             'title',                    
-            'style',                          
+            'style',                        
             'description',                
             'size_measurements',
             'size_class',

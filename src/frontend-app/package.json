@@ -9,6 +9,7 @@
     "react-cookies": "^0.1.1",
     "react-dom": "^16.9.0",
     "react-scripts": "^0.9.5",
+    "react-stripe-elements": "^5.1.0",
     "renamer": "^0.7.3",
     "whatwg-fetch": "^3.0.0"
   },
