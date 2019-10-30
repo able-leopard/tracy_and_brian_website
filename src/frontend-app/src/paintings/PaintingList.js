@@ -31,7 +31,7 @@ class PaintingList extends Component {
     //   currentApiEndpoint: endpoint
     // })
     // console.log(this.state.currentApiEndpoint)
-    console.log(endpoint)
+    // console.log(endpoint)
     this.loadPaintings(endpoint)
   }; 
 
@@ -103,7 +103,7 @@ class PaintingList extends Component {
 
   render() {
     const { paintings, author, totalItemsCount, currentApiEndpoint, maxItemsPerPage} = this.state;
-    console.log(paintings)
+    // console.log(paintings)
 
     return (
       <div className={"list-view"}>

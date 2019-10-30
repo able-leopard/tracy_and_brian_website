@@ -23,6 +23,7 @@ from django.urls import path, include, re_path
 urlpatterns = [
     path('', TemplateView.as_view(template_name='react.html')),
     re_path(r'^paintings', TemplateView.as_view(template_name='react.html')),
+    re_path(r'^checkout', TemplateView.as_view(template_name='react.html')),
     path('admin/', admin.site.urls),
     path('api/paintings/', include('paintings.urls')),
     path('api/cart/', include('cart.urls'))

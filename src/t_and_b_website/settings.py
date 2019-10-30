@@ -26,7 +26,7 @@ SECRET_KEY = 'vts2_r1e=-@%!0*8(!-qxlro^#(z$-eb_9%2$khc61+t478m_l'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'testserver']
 
 
 # Application definition

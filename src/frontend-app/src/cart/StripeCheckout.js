@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import {Elements, StripeProvider} from 'react-stripe-elements';
+import StripeCheckoutForm from "./StripeCheckoutForm";
+
+// documentation: https://stripe.com/docs/recipes/elements-react
 
 class StripeCheckout extends Component {
     constructor(props) {
@@ -10,10 +14,14 @@ class StripeCheckout extends Component {
       }
     render() { 
         return ( 
-            <main className="container my-5">
-                <h1 className="text-primary text-center">Hello {this.state.name}!</h1>
-            </main>
-
+            <StripeProvider apiKey="pk_test_CwlnViHKaxeXaEy0vW2O2PTL00LphAnP8w">
+                <div className="example">
+                    <h1>React Stripe Elements Example</h1>
+                    <Elements>
+                        <StripeCheckoutForm />
+                    </Elements>
+                </div>
+            </StripeProvider>
          );
     }
 }

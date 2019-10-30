@@ -207,7 +207,7 @@ class PaintingPhotoForm extends Component {
 
     const { title_id } = this.props;
     const {paintingPhotos} = this.state;
-    console.log(paintingPhotos)
+    // console.log(paintingPhotos)
     // console.log(typeof(paintingPhotos))
 
     return (

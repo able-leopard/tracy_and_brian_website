@@ -39,7 +39,7 @@ class PaintingPhoto extends Component {
 
     render() { 
         const mySrcs = this.props.srcs
-        console.log(mySrcs)
+        // console.log(mySrcs)
         // console.log(mySrcs[0].src)
         // console.log(this.state.clickedImageIndex)
         return (  
