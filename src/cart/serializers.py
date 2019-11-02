@@ -44,18 +44,18 @@ class MyPaintingSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     
-    url             = serializers.HyperlinkedIdentityField(
-                            view_name='cart-api:cart-detail',
-                            read_only=True,
-                            lookup_field='id',
-                            )
+    # url             = serializers.HyperlinkedIdentityField(
+    #                         view_name='cart-api:cart-detail',
+    #                         read_only=True,
+    #                         lookup_field='id',
+    #                         )
     # products     = PaintingSerializer(many=True, read_only=True)
 
     class Meta:
         model = Cart
         fields = [
             "id",
-            "url",
+            # "url",
             "products",
             "sub_total",
             "shipping",

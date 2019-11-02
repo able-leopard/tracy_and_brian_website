@@ -103,7 +103,6 @@ class PaintingList extends Component {
 
   render() {
     const { paintings, author, totalItemsCount, currentApiEndpoint, maxItemsPerPage} = this.state;
-    // console.log(paintings)
 
     return (
       <div className={"list-view"}>
@@ -133,6 +132,9 @@ class PaintingList extends Component {
             <PaintingGallery paintings={paintings}/>
             <br/>
 
+          {totalItemsCount < maxItemsPerPage + 1 ?
+            ""
+            : 
             <div>
               <PaintingPagination totalItemsCount={totalItemsCount}
                                   onPageClick={this.onPageClick}
@@ -140,7 +142,7 @@ class PaintingList extends Component {
                                   maxItemsPerPage={maxItemsPerPage}      
                 />
             </div>
-  
+          }
           </div>
         </div>
       </div>

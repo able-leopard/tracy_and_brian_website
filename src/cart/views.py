@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import generics, permissions, pagination, status
 from django.contrib.sessions.models import Session
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, HttpResponseRedirect, redirect
 
 from .models import Cart
 from paintings.models import Painting
@@ -15,41 +15,8 @@ from paintings.serializers import PaintingSerializer
 from rest_framework.request import Request
 from rest_framework.test import APIRequestFactory
 
-class CartListCreateAPIView(generics.ListCreateAPIView):
-    """
-    This is the View for every cart that exists in the website
-    """
 
-    queryset            = Cart.objects.all()
-    print(queryset)
-
-    serializer_class    = CartSerializer
-    permission_classes  = [permissions.AllowAny]    
-    # permissions.AllowAny allows POST for users that are not logged in
-    # https://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy
-        
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def get_queryset(self):
-        # filter the queryset based on the filters applied
-        queryList = Cart.objects.all()
-        print(queryList)
-
-        cart_id = self.request.session.get("cart_id", None)
-        print(cart_id)
-
-        my_session = Session.objects.all()
-
-        # print(my_session)
-        # print(len(my_session))
-        # print(self.request.session.items())
-
-        return queryList
-
-
-class CartDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class CartListAPIView(generics.RetrieveUpdateDestroyAPIView):
     """
     This is the View for a specific cart
     """
@@ -61,103 +28,83 @@ class CartDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes  = [permissions.AllowAny]
 
     
-    def get(self, request, id):
+    def get(self, request, id=None, slug=None, *args, **kwargs):
 
-        factory = APIRequestFactory()
-        request = factory.get('/')
-
-        serializer_context = {
-            'request': Request(request),
-        }
-
-        cart_obj                = get_object_or_404(Cart, id=id)
-        
-        serializer              = CartSerializer(instance=cart_obj, context=serializer_context)  
-        
+        cart_obj, new_obj       = Cart.objects.new_or_get(request)        
+        serializer              = CartSerializer(cart_obj)
+        cart_items = cart_obj.products.all()
+        print(cart_items)
         """
         doing cart_obj.products wont't return anything because it returns a manager class which you cannot iterate
         https://stackoverflow.com/questions/52428124/django-manytomany-field-returns-none-but-it-has-related-records
         
         cart_items is a list of paintings as objects, not needed here but just want to show how I got it
         """
-        cart_items = cart_obj.products.all()
-        print(cart_items)
 
         return Response(serializer.data)
 
-    def post(self, request, id):
-
-        # https://www.django-rest-framework.org/tutorial/3-class-based-views/
-        # https://stackoverflow.com/questions/29731013/django-rest-framework-cannot-call-is-valid-as-no-data-keyword-argument
-
-        factory = APIRequestFactory()
-        request = factory.get('/')
-
-        serializer_context = {
-            'request': Request(request),
-        }
-
-        cart_obj                = get_object_or_404(Cart, id=id)
-        
-        serializer              = CartSerializer(data=cart_obj, context=serializer_context) 
-
-        if serializer.is_valid():
-            serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class CartItemDetailAPIView(APIView):
+class CartUpdateAPIView(APIView):
     """
     This is the View for a specific item in a specific cart
+    We're mainly using the post method here, the get is not really used but just for show
     """
-    def get(self, request, id, slug):
+    permission_classes  = [permissions.AllowAny]
 
-        # this is required for the hyperlinked field
-        # https://stackoverflow.com/questions/34438290/assertionerror-hyperlinkedidentityfield-requires-the-request-in-the-serialize
+    def get(self, request, pk=None, *args, **kwargs):
 
-        factory = APIRequestFactory()
-        request = factory.get('/')
+        product_id = request.get('product_id')
 
-        serializer_context = {
-            'request': Request(request),
-        }
-
-        #this is the current cart as an object
-        cart_obj         = get_object_or_404(Cart, id=id)
-
-        #this is the current item (the painting) as an object
-        painting_obj     = get_object_or_404(Painting, slug=slug)
-
-        serializer       = PaintingSerializer(instance=painting_obj, context=serializer_context)  
+        product_obj = Painting.objects.get(pk=product_id)
+        cart_obj, new_obj= Cart.objects.new_or_get(request)
+        #remove from cart if already in cart
+        if product_obj in cart_obj.products.all():
+            cart_obj.products.remove(product_obj)
+        #add to cart if not in cart already
+        else:
+            cart_obj.products.add(product_obj) #adding to many-to-many
         
-        return Response(serializer.data)
+        return redirect("cart-api:cart-list")
 
+    def post(self, request, pk=None, *args, **kwargs):
 
-    """
-    stackoverflow for how to delete an m2m relationship
-    IMPORTANT to note we're not deleting the painting here but rather removing its m2m relationship with
-    the Cart model
-    https://stackoverflow.com/questions/6333068/django-removing-object-from-manytomany-relationship#
-    """
-    def delete(self, request, id, slug):
-    
-        factory = APIRequestFactory()
-        request = factory.get('/')
+        print(request)
+        product_id = request.data['products'][0]
 
-        serializer_context = {
-            'request': Request(request),
-        }
+        """
+        I have to get product_id using request.data instead of request.POST 
+        because this is not the same as POSTing a HTML form, so it won't end up in the request.POST
+        *Note remember to use dir(request) to see all methods of request
+        """
+        #to make sure that product_id is actually coming through
+        if product_id is not None:
+            
+            try:
+                #getting an instance of the painting from the Painting model
+                product_obj = Painting.objects.get(id=product_id)
+            except Painting.DoesNotExist:
+                print("Sorry this product is out of stock.")
+            
+            cart_obj, new_obj = Cart.objects.new_or_get(request)
+            
+            #remove from cart if already in cart
+            if product_obj in cart_obj.products.all():
+                cart_obj.products.remove(product_obj)
+                
+            #add to cart if not in cart already
+            else:
+                cart_obj.products.add(product_obj) #adding to many-to-many
+            
+            print(cart_obj)
+            print(product_id)
+            print(product_obj)
+            print(product_obj.price)
+            print(product_obj.style)
+            print(product_obj.artist)
 
-        #this is the current cart as an object
-        cart_obj                = get_object_or_404(Cart, id=id)
-    
-        #this is the current item as an object
-        painting_obj            = get_object_or_404(Painting, slug=slug)
-       
-        cart_obj.products.remove(painting_obj)
-        
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            #getting the total number of items in cart. need this to show the number of items in cart in the nav bar
+            request.session['cart_items'] = cart_obj.products.count() 
+
+        return redirect("cart-api:cart-list")
     
 # https://stackoverflow.com/questions/54969566/generics-listcreateapiview-django-rest-framework
 

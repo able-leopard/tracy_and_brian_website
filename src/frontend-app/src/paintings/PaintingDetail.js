@@ -5,6 +5,7 @@ import cookie from "react-cookies";
 import PaintingForm from "./PaintingForm";
 import PaintingPhoto from "./PaintingPhoto"
 import PaintingInfoTab from "./PaintingInfoTab"
+import CartCreate from "../cart/CartCreate"
 
 import '../css/PaintingDetail.css'
 
@@ -125,6 +126,12 @@ class PaintingDetail extends Component {
                                       available={painting.available}
                                       completed_year={painting.completed_year}
                                       />
+                  </div>
+                  
+                  <div className={""}>            
+                      <CartCreate   paintingId={painting.id}
+                                    slug={painting.slug}
+                      />
                   </div>
                 </div>
                 <br/>

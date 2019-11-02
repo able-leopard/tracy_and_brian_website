@@ -45,6 +45,7 @@ class PaintingForm extends Component {
       // more explaination on the Options argument: https://github.github.io/fetch/#options
       fetch(endpoint, lookupOptions)
         .then(response => {
+          console.log(response)
           return response.json();
         })
         this.clearForm()

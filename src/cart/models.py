@@ -6,6 +6,9 @@ from django.contrib.sessions.models import Session
 from paintings.models import Painting
 from paintings.utils import unique_slug_generator
 
+User = settings.AUTH_USER_MODEL
+
+
 # https://stackoverflow.com/questions/29113548/django-anonymous-session-temporary-one-to-one-related-model
 
 
@@ -14,48 +17,48 @@ class CartManager(models.Manager):
     def new_or_get(self, request):
     #getting existing object if it exists, create new object if none exists
 
-        # current_user = request.user
-        # print(current_user)
+        current_user = request.user
+        print(current_user)
 
+        #this is the getter
         cart_id = request.session.get("cart_id", None) #get the current id or None
         qs = self.get_queryset().filter(id=cart_id)
-        print(qs)
+        
         #querying the id to make sure that it actually exist
         if qs.count() == 1:
             new_obj = False
             cart_obj = qs.first()
             
             #associate cart to user if the user creates a cart then logs in after
-            # if request.user.is_authenticated and cart_obj.user is None:
-            #     cart_obj.user = request.user
-            #     cart_obj.save()
+            if request.user.is_authenticated and cart_obj.user is None:
+                cart_obj.user = request.user
+                cart_obj.save()
 
         #if the id doesn't exist then we'll create a brand new one and start that new session
         else:
-            cart_obj = Cart.objects.new_cart()
+            cart_obj = Cart.objects.new_cart(user=request.user)
             new_obj = True
-            request.session['cart_id'] = cart_obj.id #this is the setter
+            #this is the setter | we're associating the new cart's id with the session
+            request.session['cart_id'] = cart_obj.id 
 
         return cart_obj, new_obj
 
     def new_cart(self, user=None):
-        # print(user)
         user_obj = None
         if user is not None:
             if user.is_authenticated:
                 user_obj = user
-        return self.model.objects.create()
+        return self.model.objects.create(user=user_obj)
 
 
 class Cart(models.Model):
+    user                    = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE) #null and blank are True because we want even people who don't have an account to be able to add to cart
     products                = models.ManyToManyField(Painting, related_name='carts', blank=True) #blank=True because we want the ability to have an empty cart
     sub_total               = models.DecimalField(default=0.00, max_digits=100, decimal_places=2) 
     shipping                = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)     
     total                   = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
     updated                 = models.DateTimeField(auto_now=True) #to track when the cart was updated    
     timestamp               = models.DateTimeField(auto_now_add=True) #to track when the painting was added to the cart
-    painting_title_slug     = models.SlugField(blank=True, null=True)
-
 
     objects = CartManager()
     

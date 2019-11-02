@@ -1,25 +1,27 @@
 import React, { Component } from "react";
 import "whatwg-fetch";
 import cookie from "react-cookies";
-import moment from "moment";
 
-
+/* 
+We have to make an initial get request to /api/cart/ to create a new cart if there are 
+no previous cart assoicated with this session.
+Other wise /api/cart/update/ will have no cart to point to when the user tries to add products to the cart 
+*/
 
 class CartForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: null,
-      "sub_total": null,
-      "total": null,
-      "updated": null,
-      "timestamp": null
+      products: [],
+      sub_total: 0,
+      shipping: 0,
+      total: 0,
+      currentCart: []
     };
-    
   }
 
-  createCart = (data) => {
-    const endpoint = "/api/cart/"; //notice the endpoint is going to a relative request, (relative to where the final javascript built code will be)
+  updateCart = (data) => {
+    const endpoint = "/api/cart/update/"; 
     const csrfToken = cookie.load("csrftoken");
 
     if (csrfToken !== undefined) {
@@ -48,46 +50,49 @@ class CartForm extends Component {
     }
   };
 
-  updateCart = data => {
-    const endpoint = `/api/cart/`; //notice the endpoint is going to a relative request, (relative to where the final javascript built code will be)
+  getCart = () => {
+    const endpoint = `/api/cart/`;
     const csrfToken = cookie.load("csrftoken");
 
     if (csrfToken !== undefined) {
       // this goes into the options argument in fetch(url, options)
       let lookupOptions = {
-        method: "PUT",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": csrfToken
         },
-        body: JSON.stringify(data),
         credentials: "include"
     };
-
-      // fetch documentation: https://github.github.io/fetch/
-      // more explaination on the Options argument: https://github.github.io/fetch/#options
       fetch(endpoint, lookupOptions)
         .then(response => {
           return response.json();
+        })
+        .then(responseData => {
+          this.setState({
+            currentCart: responseData.products,
+          });
         })
         .catch(error => {
           console.log("error", error);
           alert("An error occured, please try again later.");
         });
     }
+    console.log(this.state.currentCart)
+    console.log(this.state.currentCart.length)
   };
 
   handleSubmit = event => {
     event.preventDefault();
     let data = this.state;
 
-    const {cart} = this.props
-    if (cart !== undefined){
+    if (data !== undefined){
         this.updateCart(data)
     } else {
-        this.createCart(data)
+        ""
     }
-    // this.updatePainting(data);
+    this.getCart()
+
   };
 
   handleInputChange = event => {
@@ -98,48 +103,41 @@ class CartForm extends Component {
     });
   };
 
-  // clearing the form
-  clearForm = event => {
-    if (event) {
-      event.preventDefault();
-    }
-    this.paintingCreateForm.reset();
-  };
-
   defaultState = () => {
       this.setState({
-        products: null,
-        "sub_total": null,
-        "total": null,
-        "updated": null,
-        "timestamp": null
+        products: [],
       })
   }
 
   componentDidMount() {
-    const { painting } = this.props;
-    if (painting !== undefined) {
-      this.setState({
-        title: painting.title,
-        description: painting.description,
+    // getting the current painting's ID
+    const { paintingId } = this.props;
 
+    // getting the items currently in the cart and storing in this.state.currentCart
+    this.getCart()
+
+    if (paintingId !== undefined) {
+      // putting the current painting id into the products so the cart can associate what painting is being added later
+      this.setState({
+        products: [paintingId],
       });
     } else {
       this.defaultState()
     }
-    // this.paintingTitleRef.current.focus();
   }
 
   render() {
-    const { products, sub_total, total, updated, timestamp } = this.state;
+
+    // HAVE TO FIGURE OUT HOW TO MAKE DOM RE-RENDER AFTER STATE CHANGE
 
     return (
-      <form onSubmit={this.handleSubmit} ref={el => (this.paintingCreateForm = el)}>
-
-        <button className="btn btn-primary">Save</button> 
-        <button className={`btn btn-secondary`} onClick={this.clearForm}>
-          Clear
-        </button>
+      <form onSubmit={this.handleSubmit}>
+        <button className="btn btn-primary">Add to cart</button>
+        <div>
+          Cart Number:
+          {this.state.currentCart.length}
+        </div>
+        
       </form>
     );
   }

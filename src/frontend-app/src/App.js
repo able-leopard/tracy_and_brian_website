@@ -19,6 +19,7 @@ class App extends Component {
         <Route exact path='/paintings/create' component={PaintingCreate}/>
         <Route exact path='/paintings/detail/:slug' component={PaintingDetail}/>
         <Route exact path='/checkout' component={StripeCheckout}/>
+        <Route exact path='/cart' component={StripeCheckout}/>
         </Switch>
       </BrowserRouter>
     );
