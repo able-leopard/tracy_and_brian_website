@@ -86,7 +86,7 @@ class PaintingDetail extends Component {
   }
 
   render() {
-    const { slug, doneLoading, painting } = this.state;
+    const { doneLoading, painting } = this.state;
 
     return (
       <p>

@@ -1,14 +1,32 @@
 import React, { Component } from "react";
 import "whatwg-fetch";
 import cookie from "react-cookies";
+import { Link } from 'react-router-dom';
 
-/* 
-We have to make an initial get request to /api/cart/ to create a new cart if there are 
-no previous cart assoicated with this session.
-Other wise /api/cart/update/ will have no cart to point to when the user tries to add products to the cart 
-*/
+// majority of the code this under the class is copied over from CartForm except I added setProduct() in here
 
-class CartForm extends Component {
+const CartItem = props => (
+    <div>
+        {console.log(props)}
+    
+        {props.item.title}
+        {props.item.size_measurements}
+        {props.item.price}
+        <Link maintainScrollPosition={false} to={{
+            pathname:`/paintings/detail/${props.item.slug}`,
+            state:{fromDashboard: false}
+        }}>
+            <img    src={props.item.srcs[0].src}
+                    /> 
+        </Link>
+        <div>
+            <button     onClick={props.setProduct}
+                        className="btn btn-primary">Remove from cart</button> 
+        </div>
+    </div>
+)
+
+class CartList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +39,6 @@ class CartForm extends Component {
   }
 
   // either adding or removing the item coming from data into cart send sending it to the REST api
-  // Important to note that the paintingId must be in the products[] before sending the data through or else the backend won't know what to do
   // this.getCart() also gets called in this
   updateCart = (data) => {
     const endpoint = "/api/cart/update/"; 
@@ -84,6 +101,7 @@ class CartForm extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let data = this.state;
+    console.log(data)
 
     if (data !== undefined){
         (
@@ -94,6 +112,12 @@ class CartForm extends Component {
         ""
     }
   };
+
+  setProduct = (paintingId) => {
+    this.setState({
+        products: [paintingId],
+      })
+  }
 
   defaultState = () => {
       this.setState({
@@ -123,28 +147,21 @@ class CartForm extends Component {
     // Get rid of the remove form cart later
 
     const {currentCart, products} = this.state
+    // console.log(currentCart)
 
     return (
       <form onSubmit={this.handleSubmit}>
         <div>
-          Items in Cart:
-          {currentCart.length}
+            {currentCart.map((item) => (
+                <CartItem   item = {item}
+                            setProduct = {() => this.setProduct(item.id)}
+                />
+            ))}
         </div>
-        {
-          currentCart.includes(products[0]) ? 
-          <div>
-            <button className="btn btn-primary">Remove from cart</button>
-            <h4>Item in cart</h4> 
-          </div>
-          : 
-          <div>
-            <button className="btn btn-primary">Add to cart</button>
-          </div>
-        }
         
       </form>
     );
   }
 }
 
-export default CartForm;
+export default CartList;

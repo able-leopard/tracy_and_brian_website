@@ -22,11 +22,11 @@ class MyPaintingPhotoSerializer(serializers.ModelSerializer):
         ]
 
 class MyPaintingSerializer(serializers.ModelSerializer):
-    painting_url             = serializers.HyperlinkedIdentityField(
-                                view_name='paintings-api:detail',
-                                read_only=True,
-                                lookup_field='slug'
-                                )
+    # painting_url             = serializers.HyperlinkedIdentityField(
+    #                             view_name='paintings-api:detail',
+    #                             read_only=True,
+    #                             lookup_field='slug'
+    #                             )
     srcs                    = MyPaintingPhotoSerializer(many=True, read_only=True)
     
 
@@ -35,8 +35,9 @@ class MyPaintingSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',  
-            'painting_url',
+            # 'painting_url',
             'price',
+            'size_measurements',
             'srcs',    
             'slug',                         
         ]
@@ -49,7 +50,7 @@ class CartSerializer(serializers.ModelSerializer):
     #                         read_only=True,
     #                         lookup_field='id',
     #                         )
-    # products     = PaintingSerializer(many=True, read_only=True)
+    products     = MyPaintingSerializer(many=True, read_only=True)
 
     class Meta:
         model = Cart

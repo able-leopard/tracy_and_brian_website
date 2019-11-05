@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
 import PaintingList from './paintings/PaintingList';
 import PaintingDetail from './paintings/PaintingDetail';
 import PaintingCreate from './paintings/PaintingCreate';
-import StripeCheckout from './cart/StripeCheckout';
+import CartList from './cart/CartList'
 
 // go to edit t_and_b_paintings/urls.py if you wish to add more routes other than paintings
 
@@ -18,8 +18,7 @@ class App extends Component {
         <Route exact path='/paintings' component={PaintingList}/>
         <Route exact path='/paintings/create' component={PaintingCreate}/>
         <Route exact path='/paintings/detail/:slug' component={PaintingDetail}/>
-        <Route exact path='/checkout' component={StripeCheckout}/>
-        <Route exact path='/cart' component={StripeCheckout}/>
+        <Route exact path='/paintings/cart' component={CartList}/>
         </Switch>
       </BrowserRouter>
     );

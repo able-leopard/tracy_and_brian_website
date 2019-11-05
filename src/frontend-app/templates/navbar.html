@@ -1,3 +1,10 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand text-success" href="/">Tracy & Brian's Painting Website</a>
-  </nav>
+  <ul>  
+    <li>
+      <a class="navbar-brand text-success" href="/">Tracy & Brian's Painting Website</a>
+    </li>
+    <li>
+      <a class="navbar-brand text-success" href="/">{{ request.session.cart_items}}</a>
+    </li>
+  </ul>
+</nav>
