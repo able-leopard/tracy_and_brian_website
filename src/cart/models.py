@@ -1,16 +1,13 @@
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save, post_save, m2m_changed
-from django.contrib.sessions.models import Session
 
 from paintings.models import Painting
 from paintings.utils import unique_slug_generator
 
 User = settings.AUTH_USER_MODEL
 
-
 # https://stackoverflow.com/questions/29113548/django-anonymous-session-temporary-one-to-one-related-model
-
 
 class CartManager(models.Manager):
 

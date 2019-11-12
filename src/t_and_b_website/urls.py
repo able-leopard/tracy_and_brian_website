@@ -26,7 +26,10 @@ urlpatterns = [
     re_path(r'^checkout', TemplateView.as_view(template_name='react.html')),
     path('admin/', admin.site.urls),
     path('api/paintings/', include('paintings.urls')),
-    path('api/cart/', include('cart.urls'))
+    path('api/cart/', include('cart.urls')),
+    path('api/billing/', include('billing.urls')),
+    path('api/account/', include('accounts.urls')),
+    path('api/address/', include('addresses.urls')),
 ]
 
 #remember to include this if you want to show images

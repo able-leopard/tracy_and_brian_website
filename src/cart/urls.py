@@ -4,15 +4,13 @@ from .views import (
         # AllCartsListCreateAPIView,
         CartListAPIView,
         CartUpdateAPIView,
+        CheckoutHomeAPIView,
     )
-
-from paintings.views import (
-    PaintingDetailAPIView
-)
 
 app_name = 'cart-api'
 
 urlpatterns = [
     path('', CartListAPIView.as_view(), name='cart-list'),
     path('update/', CartUpdateAPIView.as_view(), name='cart-item-detail'),
+    path('checkout/', CheckoutHomeAPIView.as_view(), name='checkout-home'),
  ]

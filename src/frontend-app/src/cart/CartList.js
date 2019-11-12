@@ -3,6 +3,7 @@ import "whatwg-fetch";
 import cookie from "react-cookies";
 import { Link } from 'react-router-dom';
 
+
 // majority of the code this under the class is copied over from CartForm except I added setProduct() in here
 
 const CartItem = props => (
@@ -158,7 +159,13 @@ class CartList extends Component {
                 />
             ))}
         </div>
-        
+        <Link maintainScrollPosition={false} to={{
+          pathname:`/checkout/guestemail`,
+          state:{fromDashboard: false}
+      }}>
+          <h4>Checkout </h4>
+               
+      </Link>
       </form>
     );
   }

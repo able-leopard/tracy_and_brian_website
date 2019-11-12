@@ -1,24 +1,36 @@
 import React, { Component } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
+import { createBrowserHistory } from 'history'
 
 import PaintingList from './paintings/PaintingList';
 import PaintingDetail from './paintings/PaintingDetail';
 import PaintingCreate from './paintings/PaintingCreate';
 import CartList from './cart/CartList'
 
+import GuestEmailForm from './checkout/GuestEmailForm'
+import AddressCreate from './checkout/AddressCreate'
+import ShippingAddressForm from './checkout/ShippingAddressForm'
+import BillingAddressForm from './checkout/BillingAddressForm'
+
 // go to edit t_and_b_paintings/urls.py if you wish to add more routes other than paintings
 
 class App extends Component {
+
   render() {
+
     return (
-      <BrowserRouter>
+      <BrowserRouter history={createBrowserHistory}>
         <Switch>   
         <Route exact path='/' component={PaintingList}/>
         <Route exact path='/paintings' component={PaintingList}/>
         <Route exact path='/paintings/create' component={PaintingCreate}/>
         <Route exact path='/paintings/detail/:slug' component={PaintingDetail}/>
         <Route exact path='/paintings/cart' component={CartList}/>
+        <Route exact path='/checkout/guestemail' component={GuestEmailForm}/>
+        <Route exact path='/checkout/shippingaddress' component={ShippingAddressForm}/>
+        <Route exact path='/checkout/billingaddress' component={BillingAddressForm}/>
+
         </Switch>
       </BrowserRouter>
     );
