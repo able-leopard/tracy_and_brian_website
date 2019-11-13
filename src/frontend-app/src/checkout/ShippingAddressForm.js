@@ -133,7 +133,7 @@ class ShippingAddressForm extends Component {
 
   render() {
 
-    console.log(this.state.billingSameAsShipping)
+    console.log(this.state.country)
 
 
     const { address_type, 
@@ -212,8 +212,8 @@ class ShippingAddressForm extends Component {
                     value={country}
                     required="required">
               <option value="">-</option>
-              <option value="canada">Canada</option>
-              <option value="united_states">United States</option>
+              <option value="Canada">Canada</option>
+              <option value="United States">United States</option>
             </select>
           </div>
           <div>            
@@ -231,7 +231,7 @@ class ShippingAddressForm extends Component {
                           />
               </label>
           </div>
-          <button className="btn btn-primary">Submit</button>
+          <button className="btn btn-primary">Confirm & Continue</button>
 
         </form>
       );

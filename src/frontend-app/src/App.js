@@ -12,6 +12,9 @@ import GuestEmailForm from './checkout/GuestEmailForm'
 import AddressCreate from './checkout/AddressCreate'
 import ShippingAddressForm from './checkout/ShippingAddressForm'
 import BillingAddressForm from './checkout/BillingAddressForm'
+import CheckoutSummary from './checkout/CheckoutSummary'
+import StripeCheckout from './checkout/StripeCheckout'
+
 
 // go to edit t_and_b_paintings/urls.py if you wish to add more routes other than paintings
 
@@ -30,7 +33,8 @@ class App extends Component {
         <Route exact path='/checkout/guestemail' component={GuestEmailForm}/>
         <Route exact path='/checkout/shippingaddress' component={ShippingAddressForm}/>
         <Route exact path='/checkout/billingaddress' component={BillingAddressForm}/>
-
+        <Route exact path='/checkout/summary' component={CheckoutSummary}/>
+        <Route exact path='/checkout/payment' component={StripeCheckout}/>
         </Switch>
       </BrowserRouter>
     );

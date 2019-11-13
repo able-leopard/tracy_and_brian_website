@@ -16,7 +16,7 @@ class BillingAddressForm extends Component {
         country: "",
         postal_or_zip_code: "",
         billingSameAsShipping: true,
-
+        successfulPOST: false,
     };
   }
 
@@ -42,8 +42,19 @@ class BillingAddressForm extends Component {
         .then(response => {
           return response.json();
         })
-        .then(() => {
-          this.getAddress();
+        .then(responseData => {
+          this.setState({
+            address_1: responseData.address_1,
+            city: responseData.city,
+            province_or_state: responseData.province_or_state,
+            country: responseData.country,
+            postal_or_zip_code: responseData.postal_or_zip_code,
+          })
+        })
+        .then(responseData => {
+          this.setState({
+            successfulPOST: true,
+          });
         })
         .catch(error => {
           console.log("error", error);
@@ -129,116 +140,130 @@ wait for setState to complete before running the getAddress() or defaultState() 
       })
   }
 
-  componentDidMount() {
+  resetSucessfulPOST = () => {
+    this.setState({
+      successfulPOST: false,
+    })
+  }
 
+  componentDidMount() {
 
     // getting the items currently in the cart and storing in this.state.currentCart
     this.getAddress()
+    this.resetSucessfulPOST()
     console.log("check when componentDidMount prints")
-
   }
 
   render() {
-    console.log(this.state.billingSameAsShipping)
+    console.log(this.state.country)
 
     // getting all the info from shipping address
     const { address_1, 
             city, 
             province_or_state, 
             country, 
-            postal_or_zip_code } = this.state;
+            postal_or_zip_code,
+            successfulPOST
+          } = this.state;
 
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <h1>Billing Address</h1>
-        <div>
-            <div>
-              <input  type="checkbox"
-                      // value={billingSameAsShipping}
-                      // name="billingSameAsShipping"
-                      onClick={ () => this.toggleBillingSameAsShipping()}
-                      checked={this.state.billingSameAsShipping}
-                      />
-                Same as Shipping
-            </div>
-            <div>            
-                <label>
-                    Address:
-                    <input 
-                            className="input" 
-                            type="text" 
-                            name="address_1" 
-                            onChange={event => {
-                                this.handleAddressChange(event);
-                            }}
-                            value={address_1}
-                            required="required"
-                            />
-                </label>
-            </div>
-            <div>            
-                <label>
-                    City:
-                    <input 
-                            className="input" 
-                            type="text" 
-                            name="city" 
-                            onChange={event => {
-                                this.handleAddressChange(event);
-                            }}
-                            value={city}
-                            required="required"
-                            />
-                </label>
-            </div>
-            <div>            
-                <label>
-                    Province/ State:
-                    <input 
-                            className="input" 
-                            type="text" 
-                            name="province_or_state" 
-                            onChange={event => {
-                                this.handleAddressChange(event);
-                            }}
-                            value={province_or_state}
-                            required="required"
-                            />
-                </label>
-            </div>
-            <div>
-            <label for="country">Country</label>
-            <select id="country"
-                    name="country"
-                    className=""
-                    onChange={this.handleAddressChange}
-                    value={country}
-                    required="required">
-                <option value="">-</option>
-                <option value="canada">Canada</option>
-                <option value="united_states">United States</option>
-            </select>
-            </div>
-            <div>            
-                <label>
-                    Postal/ Zip Code:
-                    <input 
-                            className="input" 
-                            type="text" 
-                            name="postal_or_zip_code" 
-                            onChange={event => {
-                                this.handleAddressChange(event);
-                            }}
-                            value={postal_or_zip_code}
-                            required="required"
-                            />
-                </label>
-            </div>
-        </div>
-        <button className="btn btn-primary">Submit</button>
+        // redirect to billing page after successful POST of shipping address
+    if (successfulPOST === true)  
 
-      </form>    
-    );
+        // remember to use push to or else you lose the history and won't be able to go back to prev page
+        // https://stackoverflow.com/questions/47956592/going-back-from-a-redirect-tag-react-router
+      return <Redirect push to={{ pathname: '/checkout/summary'}} />
+              
+      else
+
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <h1>Billing Address</h1>
+          <div>
+              <div>
+                <input  type="checkbox"
+                        onClick={ () => this.toggleBillingSameAsShipping()}
+                        checked={this.state.billingSameAsShipping}
+                        />
+                  Same as Shipping
+              </div>
+              <div>            
+                  <label>
+                      Address:
+                      <input 
+                              className="input" 
+                              type="text" 
+                              name="address_1" 
+                              onChange={event => {
+                                  this.handleAddressChange(event);
+                              }}
+                              value={address_1}
+                              required="required"
+                              />
+                  </label>
+              </div>
+              <div>            
+                  <label>
+                      City:
+                      <input 
+                              className="input" 
+                              type="text" 
+                              name="city" 
+                              onChange={event => {
+                                  this.handleAddressChange(event);
+                              }}
+                              value={city}
+                              required="required"
+                              />
+                  </label>
+              </div>
+              <div>            
+                  <label>
+                      Province/ State:
+                      <input 
+                              className="input" 
+                              type="text" 
+                              name="province_or_state" 
+                              onChange={event => {
+                                  this.handleAddressChange(event);
+                              }}
+                              value={province_or_state}
+                              required="required"
+                              />
+                  </label>
+              </div>
+              <div>
+              <label for="country">Country</label>
+              <select id="country"
+                      name="country"
+                      className=""
+                      onChange={this.handleAddressChange}
+                      value={country}
+                      required="required">
+                  <option value="">-</option>
+                  <option value="Canada">Canada</option>
+                  <option value="United States">United States</option>
+              </select>
+              </div>
+              <div>            
+                  <label>
+                      Postal/ Zip Code:
+                      <input 
+                              className="input" 
+                              type="text" 
+                              name="postal_or_zip_code" 
+                              onChange={event => {
+                                  this.handleAddressChange(event);
+                              }}
+                              value={postal_or_zip_code}
+                              required="required"
+                              />
+                  </label>
+              </div>
+          </div>
+          <button className="btn btn-primary">Confirm & Continue</button>
+
+        </form>    
+      );
   }
 }
 

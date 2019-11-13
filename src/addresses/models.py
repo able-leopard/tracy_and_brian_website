@@ -13,8 +13,8 @@ ADDRESS_TYPE = (
 
 
 COUNTRY_CHOICES = (
-    ('canada', 'Canada'),
-    ('united_states', 'United States'),
+    ('Canada', 'Canada'),
+    ('United States', 'United States'),
 )
 
 class AddressManager(models.Manager):

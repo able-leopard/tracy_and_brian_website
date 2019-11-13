@@ -22,7 +22,7 @@ const CartItem = props => (
         </Link>
         <div>
             <button     onClick={props.setProduct}
-                        className="btn btn-primary">Remove from cart</button> 
+                        className="btn btn-primary">X</button>
         </div>
     </div>
 )
@@ -90,6 +90,7 @@ class CartList extends Component {
         .then(responseData => {
           this.setState({
             currentCart: responseData.products,
+            total: responseData.total
           });
         })
         .catch(error => {
@@ -145,11 +146,16 @@ class CartList extends Component {
 
   render() {
 
-    // Get rid of the remove form cart later
-
-    const {currentCart, products} = this.state
-    // console.log(currentCart)
-
+    const {currentCart, products, total} = this.state
+    const {billing_postal_or_zip_code} = this.props
+    
+    /* 
+    using billing_postal_or_zip_code as a check for condition display since billing_postal_or_zip_code is a 
+    required field in BillingAddressForm.js, this ensures that the checkout link only gets displayed in the cart page 
+    because once we get to the order summary page, billing_postal_or_zip_code is already filled so the
+    checkout link doesn't get displayed  
+    */
+   
     return (
       <form onSubmit={this.handleSubmit}>
         <div>
@@ -158,14 +164,28 @@ class CartList extends Component {
                             setProduct = {() => this.setProduct(item.id)}
                 />
             ))}
+            
+            { currentCart.length > 0 ? 
+              <h6>Total Price: {total}</h6> 
+              : ""}
+            
         </div>
-        <Link maintainScrollPosition={false} to={{
-          pathname:`/checkout/guestemail`,
-          state:{fromDashboard: false}
-      }}>
-          <h4>Checkout </h4>
-               
-      </Link>
+        
+        { currentCart.length < 1 ?  "Cart is empty" : ""}
+      
+        
+        { currentCart.length > 0 && billing_postal_or_zip_code === undefined ? 
+
+          <Link maintainScrollPosition={false} to={{
+            pathname:`/checkout/guestemail`,
+            state:{fromDashboard: false}
+            }}>
+            <h4>Checkout </h4>       
+          </Link>
+          : 
+          ""}
+      
+
       </form>
     );
   }

@@ -151,7 +151,7 @@ class GuestEmailForm extends Component {
                             }}
                           />
               </label>
-              <button className="btn btn-primary">Submit</button>
+              <button className="btn btn-primary">Confirm & Continue</button>
 
               </div>
           

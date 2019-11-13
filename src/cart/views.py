@@ -9,13 +9,13 @@ from django.contrib.sessions.models import Session
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, HttpResponseRedirect, redirect
 
+from .models import Cart
 from paintings.models import Painting
 from orders.models import Order
 from billing.models import BillingProfile
 from accounts.models import GuestEmail
 from addresses.models import Address
 
-from .models import Cart
 from .permissions import IsOwnerOrReadOnly
 from .serializers import CartSerializer
 from orders.serializers import OrderSerializer
@@ -116,7 +116,7 @@ class CheckoutHomeAPIView(APIView):
 
     def get(self, request, pk=None, *args, **kwargs):
 
-        del request.session["address_id"]
+        # del request.session["address_id"]
         # del request.session["shipping_address_id"]
         # del request.session["billing_address_id"]
 
@@ -127,9 +127,9 @@ class CheckoutHomeAPIView(APIView):
         if cart_created or cart_obj.products.count() == 0:
             return redirect("cart-api:cart-list")     
 
-        billing_address_id = request.session.get("billing_address_id", None)
-
-        shipping_address_id = request.session.get("shipping_address_id", None)
+        billing_address_id      = request.session.get("billing_address_id", None)
+        shipping_address_id     = request.session.get("shipping_address_id", None)
+        account_id              = request.session.get("account_id", None)
 
         #getting and saving the billing and shipping address if they exist
         billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
@@ -155,17 +155,29 @@ class CheckoutHomeAPIView(APIView):
         # this is a dictionary containing all the fields from specified in OrderSerializer
         order_data              = serializer.data    
 
+        # appending to the order object with the associated FK objects in the same session so we can
+        # show all the info from order, cart, email, shipping address, billing address in one summary page
+        
+        if account_id:
+            account_id_obj                              = GuestEmail.objects.get(id=account_id)
+            order_data['email']                         = account_id_obj.email
+
         if shipping_address_id:
-            shipping_address_obj = Address.objects.get(id=shipping_address_id)
+            shipping_address_obj                        = Address.objects.get(id=shipping_address_id)
             order_data['shipping_address_1']            = shipping_address_obj.address_1
             order_data['shipping_city']                 = shipping_address_obj.city 
             order_data['shipping_province_or_state']    = shipping_address_obj.province_or_state
             order_data['shipping_country']              = shipping_address_obj.country
-            order_data['postal_or_zip_code']            = shipping_address_obj.postal_or_zip_code
+            order_data['shipping_postal_or_zip_code']   = shipping_address_obj.postal_or_zip_code
 
-            # don't delete the sessions here. only delete at the post after everything is done
-            del request.session["shipping_address_id"]
-            del request.session["billing_address_id"]
+            
+        if billing_address_id:
+            billing_address_obj                         = Address.objects.get(id=billing_address_id)
+            order_data['billing_address_1']             = billing_address_obj.address_1
+            order_data['billing_city']                  = billing_address_obj.city 
+            order_data['billing_province_or_state']     = billing_address_obj.province_or_state
+            order_data['billing_country']               = billing_address_obj.country
+            order_data['billing_postal_or_zip_code']    = billing_address_obj.postal_or_zip_code
 
         return Response(order_data)
 
@@ -205,46 +217,17 @@ class CheckoutHomeAPIView(APIView):
 
         #POST specific code end
 
-        # make a get request after filling in the addresses
-        
-        # only make a post request once its been paid off
         serializer              = OrderSerializer(order_obj)
-        
+
+            # don't delete the sessions here. only delete at the post after payment is done
+            # no need to delete the account id & billing_profile_id, might as will keep their email for next time
+            
+            # del request.session["cart_id"]
+            # del request.session["cart_items"]
+            # del request.session["address_id"]            
+            # del request.session["shipping_address_id"]
+            # del request.session["billing_address_id"]
+
+
         return Response(serializer.data)
 
-class CheckoutSummaryAPIView(APIView):
-
-    permission_classes  = [permissions.AllowAny]
-
-
-    def get(self, request, pk=None, *args, **kwargs):
-
-        cart_obj, cart_created = Cart.objects.new_or_get(request)
-        order_obj = None
-        if cart_created or cart_obj.products.count() == 0:
-            return redirect("cart-api:cart-list")
-
-        billing_address_id = request.session.get("billing_address_id", None)
-
-        shipping_address_id = request.session.get("shipping_address_id", None)
-
-        #getting and saving the billing and shipping address if they exist
-        billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
-        address_qs = None
-
-        if billing_profile is not None:
-            if request.user.is_authenticated:
-                address_qs = Address.objects.filter(billing_profile=billing_profile)
-            order_obj, order_obj_created = Order.objects.new_or_get(billing_profile, cart_obj)
-            if shipping_address_id:
-                order_obj.shipping_address = Address.objects.get(id=shipping_address_id)
-                del request.session["shipping_address_id"]
-            if billing_address_id:
-                order_obj.billing_address = Address.objects.get(id=billing_address_id)
-                del request.session["billing_address_id"]
-            if billing_address_id or shipping_address_id:
-                order_obj.save()
-
-        serializer              = OrderSerializer(order_obj)
-        
-        return Response(serializer.data)
