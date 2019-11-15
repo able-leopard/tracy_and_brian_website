@@ -1,1 +1,1 @@
-stripe_secret_key = 'sk_test_hqZxQTYC5Gif7ClgQ8EOAms700n2uPMW2s'
+stripe_secret_key = 'no key'
