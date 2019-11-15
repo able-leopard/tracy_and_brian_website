@@ -56,9 +56,16 @@ class Painting(models.Model):
 
     def __str__(self):
         return self.title
-    
+
+    #this gets callled after purchase is complete
+    def mark_unavailable(self):
+        self.available   = False
+        self.save()
+        return self.available
+
     class Meta:
         ordering = ["-timestamp", "-updated"]
+
 
 def pre_save_painting_receiver(sender, instance, *args, **kwargs):
     if not instance.slug:

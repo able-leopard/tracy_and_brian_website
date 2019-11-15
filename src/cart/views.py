@@ -24,6 +24,9 @@ from accounts.serializers import GuestEmailSerializer
 from billing.serializers import BillingProfileSerializer
 from paintings.serializers import PaintingSerializer
 
+from stripe_api_key import stripe_secret_key
+import stripe
+
 class CartListAPIView(generics.RetrieveUpdateDestroyAPIView):
     """
     This is the View for a specific cart
@@ -116,20 +119,20 @@ class CheckoutHomeAPIView(APIView):
 
     def get(self, request, pk=None, *args, **kwargs):
 
+        # del request.session["cart_id"]
         # del request.session["address_id"]
         # del request.session["shipping_address_id"]
         # del request.session["billing_address_id"]
 
-        #address session is not matching, session as 1 smaller than actual id
+        billing_address_id      = request.session.get("billing_address_id", None)
+        shipping_address_id     = request.session.get("shipping_address_id", None)
+        account_id              = request.session.get("account_id", None)
+        cart_id                 = request.session.get("cart_id", None)
 
         cart_obj, cart_created = Cart.objects.new_or_get(request)
         order_obj = None
         if cart_created or cart_obj.products.count() == 0:
             return redirect("cart-api:cart-list")     
-
-        billing_address_id      = request.session.get("billing_address_id", None)
-        shipping_address_id     = request.session.get("shipping_address_id", None)
-        account_id              = request.session.get("account_id", None)
 
         #getting and saving the billing and shipping address if they exist
         billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
@@ -143,21 +146,17 @@ class CheckoutHomeAPIView(APIView):
             order_obj, order_obj_created = Order.objects.new_or_get(billing_profile, cart_obj)
             if shipping_address_id:
                 order_obj.shipping_address = Address.objects.get(id=shipping_address_id)
-                # del request.session["shipping_address_id"]
             if billing_address_id:
                 order_obj.billing_address = Address.objects.get(id=billing_address_id)
-                # del request.session["billing_address_id"]
             if billing_address_id or shipping_address_id:
                 order_obj.save()
 
+        # order_data is a dictionary containing all the fields from specified in OrderSerializer
         serializer              = OrderSerializer(order_obj)
-
-        # this is a dictionary containing all the fields from specified in OrderSerializer
         order_data              = serializer.data    
 
         # appending to the order object with the associated FK objects in the same session so we can
         # show all the info from order, cart, email, shipping address, billing address in one summary page
-        
         if account_id:
             account_id_obj                              = GuestEmail.objects.get(id=account_id)
             order_data['email']                         = account_id_obj.email
@@ -179,55 +178,91 @@ class CheckoutHomeAPIView(APIView):
             order_data['billing_country']               = billing_address_obj.country
             order_data['billing_postal_or_zip_code']    = billing_address_obj.postal_or_zip_code
 
+        if cart_id:
+            cart_obj                                    = Cart.objects.get(id=cart_id)
+            
+            #painting is an m2m relationship in cart
+            painting_objects_in_cart                    = cart_obj.products.all()
+
+            #getting the painting title & price and passing it as a tuple to be added to this order summary object
+            painting_info = []
+            for painting_obj in painting_objects_in_cart.iterator():
+                painting_title = painting_obj.title
+                painting_price = painting_obj.price
+                painting_data  = (painting_title, painting_price)
+                painting_info.append(painting_data)
+
+            order_data['painting_info']                 = painting_info
+
         return Response(order_data)
 
     def post(self, request, pk=None, *args, **kwargs):
 
+        # START OF STRIPE PAYMENT CODE
+        stripe.api_key = stripe_secret_key
+        
+        token       = request.data['token']['id']
+        total       = int(float(request.data['total']))        
+        email       = str(request.data['email'])
+        order_id    = str(request.data['order_id']) 
+
+        # we have to multiple the amount by 100 because stripe default amounts are in cents 
+        charge = stripe.Charge.create(
+            amount          = total * 100,
+            currency        = 'cad',
+            description     = 'Order ID: '+order_id,
+            source          = token,
+            receipt_email   = email,
+            idempotency_key = order_id #an extra layer of security to make sure we don't double charge
+        )
+        #stripe docs on email receipts: https://stripe.com/docs/receipts
+        #stripe docs on idempotent key: https://stripe.com/docs/api/idempotent_requests
+        # END OF STRIPE PAYMENT CODE
+
+        address_id              = request.session.get("address_id", None)
+        billing_address_id      = request.session.get("billing_address_id", None)
+        shipping_address_id     = request.session.get("shipping_address_id", None)
+        cart_id                 = request.session.get("cart_id", None)
+
+
         cart_obj, cart_created = Cart.objects.new_or_get(request)
         order_obj = None
         if cart_created or cart_obj.products.count() == 0:
-            return redirect("cart:cart-list")  
-
-        billing_address_id = request.session.get("billing_address_id", None)
-        shipping_address_id = request.session.get("shipping_address_id", None)
+            return redirect("cart-api:cart-list")   
 
         #getting and saving the billing and shipping address if they exist
         billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
         address_qs = None
 
         if billing_profile is not None:
-            if request.user.is_authenticated:        
+            if request.user.is_authenticated:
                 address_qs = Address.objects.filter(billing_profile=billing_profile)
             order_obj, order_obj_created = Order.objects.new_or_get(billing_profile, cart_obj)
-            if shipping_address_id:
-                order_obj.shipping_address = Address.objects.get(id=shipping_address_id)
-                del request.session["shipping_address_id"]
-            if billing_address_id:
-                order_obj.billing_address = Address.objects.get(id=billing_address_id)
-                del request.session["billing_address_id"]
-            if billing_address_id or shipping_address_id:
-                order_obj.save()
-        
-        #POST specific code begin
+
+            serializer              = OrderSerializer(order_obj)
+
+        # START OF CODE FOR HANDLING CHANGES WHEN ORDER IS DONE
         is_done = order_obj.check_done()
         if is_done:
             order_obj.mark_paid()
+
+            #getting all painting objects in cart and making it unavailable in the painting model
+            if cart_id:
+                cart_obj                                    = Cart.objects.get(id=cart_id)
+                painting_objects_in_cart                    = cart_obj.products.all()
+
+                for painting_obj in painting_objects_in_cart.iterator():
+                    painting_obj.mark_unavailable()
+
+            #deleting sessions/ adjusting all cart & checkout related sessions
+            # no need to delete the account id & billing_profile_id, might as will keep their email for next time
             request.session['cart_items'] = 0
             del request.session['cart_id']
-
-        #POST specific code end
-
-        serializer              = OrderSerializer(order_obj)
-
-            # don't delete the sessions here. only delete at the post after payment is done
-            # no need to delete the account id & billing_profile_id, might as will keep their email for next time
-            
-            # del request.session["cart_id"]
-            # del request.session["cart_items"]
-            # del request.session["address_id"]            
-            # del request.session["shipping_address_id"]
-            # del request.session["billing_address_id"]
-
-
+            del request.session["address_id"]            
+            del request.session["shipping_address_id"]
+            del request.session["billing_address_id"]
+        
+        # END OF CODE FOR HANDLING CHANGES WHEN ORDER IS DONE
+        
         return Response(serializer.data)
 

@@ -24,7 +24,6 @@ class GuestEmailForm extends Component {
     if (csrfToken !== undefined) {
       let lookupOptions = {
         method: "POST",
-        redirect: 'follow',
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": csrfToken

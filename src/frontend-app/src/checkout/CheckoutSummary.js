@@ -21,7 +21,6 @@ class CheckoutSummary extends Component {
       billing_province_or_state: "",
       billing_country: "",
       billing_postal_or_zip_code: "",
-      successfulPOST: false,
     };
   }
 
@@ -75,8 +74,8 @@ class CheckoutSummary extends Component {
     }
   };
 
-  // getting the items currently in cart placing them in this.state.currentCart
-  getGuestEmail = () => {
+  // getting all order summary info
+  getOrderSummaryInfo = () => {
     const endpoint = `/api/cart/checkout/`;
     const csrfToken = cookie.load("csrftoken");
 
@@ -115,113 +114,81 @@ class CheckoutSummary extends Component {
     }
   };
 
-  handleEmailChange = event => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-  };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    let data = this.state;
-
-    if (data !== undefined){
-        (
-          this.updateGuestEmail(data)
-        )
-    } else {
-        ""
-    }
-  };
-
-  resetSucessfulPOST = () => {
-      this.setState({
-        successfulPOST: false,
-      })
+  routeChangePayment = () => {
+    let myPath = `/checkout/payment`;
+    this.props.history.push(myPath);
   }
-
-  tiggerSucessfulPOST = () => {
-    this.setState({
-      successfulPOST: true,
-    })
-}
 
 
   componentDidMount() {
 
-    // getting the items currently in the cart and storing in this.state.currentCart
-    this.resetSucessfulPOST()
-    this.getGuestEmail() 
+    this.getOrderSummaryInfo() 
   }
-
 
   render() {
 
     const { email, 
             shipping_address_1, shipping_city, shipping_province_or_state, shipping_country, shipping_postal_or_zip_code,
             billing_address_1, billing_city, billing_province_or_state, billing_country, billing_postal_or_zip_code,
-            successfulPOST} = this.state
+          } = this.state
 
-    console.log(successfulPOST)
+    return (
+      <form>
+          <div>            
+              <CartList billing_postal_or_zip_code={billing_postal_or_zip_code}/>
 
-    // redirect to shipping page after successful POST of email
-    if (successfulPOST === true)  
+              <h4>Contact Info </h4>
+              <Link maintainScrollPosition={false} to={{
+                  pathname:`/checkout/guestemail`,
+                  state:{fromDashboard: false}
+              }}>
+                  <h6>Edit </h6>
+              </Link>
+              Email: {email}
 
-      // remember to use push to or else you lose the history and won't be able to go back to prev page
-      // https://stackoverflow.com/questions/47956592/going-back-from-a-redirect-tag-react-router
-      return <Redirect push to={{ pathname: '/checkout/shippingaddress'}} />
-      
-    else
+              <hr/>
 
-      return (
-        <form onSubmit={this.handleSubmit}>
-            <div>            
-                <CartList billing_postal_or_zip_code={billing_postal_or_zip_code}/>
+              <h4>Shipping Information</h4>
+              <Link maintainScrollPosition={false} to={{
+                  pathname:`/checkout/shippingaddress`,
+                  state:{fromDashboard: false}
+              }}>
+                  <h6>Edit </h6>
+              </Link>
 
-                <h4>Contact Info </h4>
-                <Link maintainScrollPosition={false} to={{
-                    pathname:`/checkout/guestemail`,
-                    state:{fromDashboard: false}
-                }}>
-                    <h6>Edit </h6>
-                </Link>
-                Email: {email}
-
-                <hr/>
-
-                <h4>Shipping Information</h4>
-                <Link maintainScrollPosition={false} to={{
-                    pathname:`/checkout/shippingaddress`,
-                    state:{fromDashboard: false}
-                }}>
-                    <h6>Edit </h6>
-                </Link>
-
-                Address: {shipping_address_1}
-                City: {shipping_city}
-                Province/ State: {shipping_province_or_state}
-                Country: {shipping_country}
-                Postal Code/ Zip Code: {shipping_postal_or_zip_code}
+              Address: {shipping_address_1}
+              City: {shipping_city}
+              Province/ State: {shipping_province_or_state}
+              Country: {shipping_country}
+              Postal Code/ Zip Code: {shipping_postal_or_zip_code}
 
 
-                <hr/>
+              <hr/>
 
 
-                <h4>Billing Information</h4>
-                <Link maintainScrollPosition={false} to={{
-                    pathname:`/checkout/billingaddress`,
-                    state:{fromDashboard: false}
-                }}>
-                    <h6>Edit </h6>
-                </Link>
-                Address: {billing_address_1}
-                City: {billing_city}
-                Province/ State: {billing_province_or_state}
-                Country: {billing_country}
-                Postal Code/ Zip Code: {billing_postal_or_zip_code}
-            </div>
-          
-        </form>
-    );
+              <h4>Billing Information</h4>
+              <Link maintainScrollPosition={false} to={{
+                  pathname:`/checkout/billingaddress`,
+                  state:{fromDashboard: false}
+              }}>
+                  <h6>Edit </h6>
+              </Link>
+              Address: {billing_address_1}
+              City: {billing_city}
+              Province/ State: {billing_province_or_state}
+              Country: {billing_country}
+              Postal Code/ Zip Code: {billing_postal_or_zip_code}
+          </div>
+          <button 
+            onClick={this.routeChangePayment}
+            className="btn btn-primary"
+            >
+            Make Payment
+          </button>
+              
+      </form>
+  );
   }
 }
 
