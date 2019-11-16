@@ -112,3 +112,6 @@ def post_save_order_total(sender, instance, created, *args, **kwargs):
 
 post_save.connect(post_save_order_total, sender=Order)
      
+
+
+
