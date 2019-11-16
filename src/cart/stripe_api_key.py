@@ -1,1 +1,0 @@
-stripe_secret_key = 'test'

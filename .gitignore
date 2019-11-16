@@ -1,0 +1,10 @@
+# stripe api keyls
+/src/cart/stripe_api_key.py
+
+# Django #
+*.log
+*.pot
+*.pyc
+/src/t_and_b_website/__pycache__
+/src/db.sqlite3
+
