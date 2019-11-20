@@ -1,1 +1,49 @@
-.input { width: 290px; height: 90px; border: 1px solid #999999; padding: 5px; }
+.container{
+    max-width: 500px;
+}
+
+.input-group{
+    height: 30px;
+    
+}
+/* 
+.my-width{
+    width: 425px;
+} */
+  /* 
+  mid-size screen until i-pad 
+  the ipad size really starts at 1250px but I started at 1600px to make everything fit
+  */
+  @media only screen and (max-width: 1600px) and (min-width: 760px){
+
+    .input-group{
+        height: 30px;
+    }
+
+    /* .my-width{
+        width: 425px;
+    } */
+    
+}
+
+
+  /* Media query for phones */
+  @media only screen and (max-width: 759px) and (min-width: 1px){
+    
+    .input-group{
+        height: 30px;
+    }
+
+    /* .my-width{
+        width: 425px;
+    } */
+
+}
+
+/* 
+apparently changing the bootstrap styles will automatically affect other css documents as well
+since .container & .input-group are bootstrap styles, I had to create .my-width to style the input
+from GuestEmailForm and isolate it so it doesn't affect elements in other js files that are also using
+.container * .input-group
+
+*/

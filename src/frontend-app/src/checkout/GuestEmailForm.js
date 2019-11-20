@@ -136,25 +136,28 @@ class GuestEmailForm extends Component {
     else
 
       return (
-        <form onSubmit={this.handleSubmit}>
-          <div>            
-              <label>
-                  Guest Email:
-                  <input 
-                          className="input" 
-                          type="email" 
-                          name="email"
-                          value={email} 
-                          onChange={event => {
-                              this.handleEmailChange(event);
-                            }}
-                          />
-              </label>
-              <button className="btn btn-primary">Confirm & Continue</button>
-
-              </div>
-          
-        </form>
+        <main className="container">
+          <form 
+            onSubmit={this.handleSubmit}
+            className="form-group mt-3 border border-primary rounded shadow-1g p-3"
+          >
+                <label>
+                    Guest Email
+                    <input 
+                            className="input-group my-1 p-1 border border-dark my-width"
+                            type="email" 
+                            name="email"
+                            value={email} 
+                            onChange={event => {
+                                this.handleEmailChange(event);
+                              }}
+                            />
+                </label>
+                <br/>
+                <br/>
+                <button className="btn btn-primary border border-dark shadow">Confirm & Continue</button>          
+          </form>
+        </main>
     );
   }
 }

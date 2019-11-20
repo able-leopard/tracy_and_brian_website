@@ -100,15 +100,6 @@ class PaintingDetail extends Component {
                   <div className={"detail-view-title-section"}>            
                     <h1>{painting.title}</h1> 
                     <br/>               
-                    <Link
-                      maintainScrollPosition={false}
-                      to={{
-                        pathname: `/paintings`,
-                        state: { fromDashboard: false }
-                      }}
-                    >
-                    Browse Paintings
-                    </Link>
                   </div>
                   <div className={"detail-view-image-section"}>            
                     <PaintingPhoto    
@@ -125,14 +116,11 @@ class PaintingDetail extends Component {
                                       size_measurements={painting.size_measurements}
                                       available={painting.available}
                                       completed_year={painting.completed_year}
+                                      id={painting.id}
+                                      slug={painting.slug}
                                       />
                   </div>
-                  
-                  <div className={""}>            
-                      <CartCreate   paintingId={painting.id}
-                                    slug={painting.slug}
-                      />
-                  </div>
+                
                 </div>
                 <br/>
                 <p>

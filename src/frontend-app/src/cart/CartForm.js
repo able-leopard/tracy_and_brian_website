@@ -5,14 +5,14 @@ import cookie from "react-cookies";
 /* 
 We have to make an initial get request to /api/cart/ to create a new cart if there are 
 no previous cart assoicated with this session.
-Other wise /api/cart/update/ will have no cart to point to when the user tries to add products to the cart 
+Other wise /api/cart/update/ will have no cart to point to when the user tries to add currentPaintingId to the cart 
 */
 
 class CartForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [],
+      currentPaintingId: [],
       sub_total: 0,
       shipping: 0,
       total: 0,
@@ -21,7 +21,7 @@ class CartForm extends Component {
   }
 
   // either adding or removing the item coming from data into cart send sending it to the REST api
-  // Important to note that the paintingId must be in the products[] before sending the data through or else the backend won't know what to do
+  // Important to note that the paintingId must be in the currentPaintingId[] before sending the data through or else the backend won't know what to do
   // this.getCart() also gets called in this
   updateCart = (data) => {
     const endpoint = "/api/cart/update/"; 
@@ -97,7 +97,7 @@ class CartForm extends Component {
 
   defaultState = () => {
       this.setState({
-        products: [],
+        currentPaintingId: [],
       })
   }
 
@@ -109,9 +109,9 @@ class CartForm extends Component {
     this.getCart()
 
     if (paintingId !== undefined) {
-      // putting the current painting id into the products so the cart can associate what painting is being added later
+      // putting the current painting id into the currentPaintingId so the cart can associate what painting is being added later
       this.setState({
-        products: [paintingId],
+        currentPaintingId: [paintingId],
       });
     } else {
       this.defaultState()
@@ -122,26 +122,26 @@ class CartForm extends Component {
 
     // Get rid of the remove form cart later
 
-    const {currentCart, products} = this.state
+    const {currentCart, currentPaintingId} = this.state
+    const myCart = []
+    currentCart.forEach(function (item) {
+      myCart.push(item.id)
+    });
 
     return (
       <form onSubmit={this.handleSubmit}>
-        <div>
-          Items in Cart:
-          {currentCart.length}
-        </div>
+      
         {
-          currentCart.includes(products[0]) ? 
+          myCart.includes(currentPaintingId[0]) ? 
           <div>
-            <button className="btn btn-primary">Remove from cart</button>
-            <h4>Item in cart</h4> 
+            <br/>
+            <a>Current painting already in cart</a> 
           </div>
           : 
           <div>
             <button className="btn btn-primary">Add to cart</button>
           </div>
         }
-        
       </form>
     );
   }

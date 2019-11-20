@@ -16,11 +16,14 @@ class AddressSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             'billing_profile',              
-            'address_type',  
+            'address_type',
+            'first_name',     
+            'last_name',     
             'address_1',     
             'address_2',           
             'city',                        
             'province_or_state',     
             'country',
-            'postal_or_zip_code' 
+            'postal_or_zip_code',
+            'phone',
         ]

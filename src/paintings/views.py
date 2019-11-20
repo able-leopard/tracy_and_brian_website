@@ -55,7 +55,7 @@ class PaintingListCreateAPIView(generics.ListCreateAPIView):
         style       = self.request.query_params.get('style', None)
         series      = self.request.query_params.get('series', None)
         artist      = self.request.query_params.get('artist', None)
-        available   = self.request.query_params.get('available', None)
+        available   = self.request.query_params.get('available', True)
 
         # for displaying distinct queries by a field, not needed for now
         # https://stackoverflow.com/questions/2466496/select-distinct-values-from-a-table-field

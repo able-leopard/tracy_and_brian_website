@@ -1,0 +1,101 @@
+.cart-list{
+    display: grid;
+    padding-right: 600px;
+}
+
+.my-img{
+    width: 150px;
+}
+
+.my-container {
+    display: flex; /* or inline-flex */
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+.photo-and-info-container{
+    display: flex; /* or inline-flex */
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 20px;
+  }
+
+.price-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+.delete-button {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    font-family: arial, sans-serif;
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.price-total{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+}
+
+.price-total td{
+    padding-left: 30px;    
+}
+
+.checkout-button{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding-top: 20px;
+}
+
+
+/* mid-size screen until i-pad */
+@media only screen and (max-width: 1250px) and (min-width: 760px){
+    .cart-list{
+        display: grid;
+        padding-right: 0px;
+    }
+
+  }
+  
+  /* Media query for phones */
+  @media only screen and (max-width: 759px) and (min-width: 1px){
+  
+    .cart-list{
+        display: grid;
+        padding-right: 0px;
+    }
+
+    .my-img{
+        width: 100px;
+    }
+  
+
+    .item-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 20px;
+        font-size: 10px;
+      }
+    
+    .price-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        font-size: 10px;
+      }
+    
+  }

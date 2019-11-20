@@ -19,7 +19,8 @@ class PaintingForm extends Component {
       size_measurements: null,
       artist: null,     
       completed_year: null,   
-      price: null,  
+      price: null, 
+      allPaintings: null, 
     };
   }
 
@@ -86,6 +87,39 @@ class PaintingForm extends Component {
     }
   };
 
+  // returns an array of a list of all paintings, each with their painting id, associated name, and a photo src
+  loadUniqueTitleIds = () => {
+   
+    let endpoint = `/api/paintings/photos?`
+
+    let lookupOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }; 
+    
+    const csrfToken = cookie.load("csrftoken");
+    if (csrfToken !== undefined) {
+      lookupOptions["credentials"] = "include";
+      lookupOptions["headers"]["X-CSRFToken"];
+    }
+    
+    fetch(endpoint, lookupOptions)
+      .then(response => {
+        return response.json();
+      })
+      .then(responseData => {
+        this.setState({
+          allPaintings: responseData,
+        });
+      })
+      .catch(error => {
+        console.log("error", error);
+      });
+  }
+
+
   handleSubmit = event => {
     event.preventDefault();
     let data = this.state;
@@ -96,6 +130,7 @@ class PaintingForm extends Component {
     } else {
         this.createPainting(data)
     }
+  this.loadUniqueTitleIds()
   };
 
   handleInputChange = event => {
@@ -133,6 +168,7 @@ class PaintingForm extends Component {
 
   componentDidMount() {
     const { painting } = this.props;
+    this.loadUniqueTitleIds()
     // console.log(painting.id)
     // console.log(painting.title)
     if (painting !== undefined) {
@@ -156,7 +192,7 @@ class PaintingForm extends Component {
   render() {
     // for the style options remember it has to match with the options in paintings model.py
 
-    const { id, title, description, style, size_class, size_measurements, artist, completed_year, price} = this.state;
+    const { id, title, description, style, size_class, size_measurements, artist, completed_year, price, allPaintings} = this.state;
 
     return (
       <div>
@@ -273,7 +309,7 @@ class PaintingForm extends Component {
             Clear
           </button>
         </form>
-        <PaintingPhotoForm title_id={id} title={title}/>
+        <PaintingPhotoForm title_id={id} title={title} allPaintings={allPaintings}/>
       </div>
     );
   }

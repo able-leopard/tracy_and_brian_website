@@ -9,7 +9,6 @@ class CartCreate extends Component {
 
     return ( 
       <div>
-        <h1>Create New Cart</h1>
         <CartForm paintingId={paintingId}
                   slug={slug} />
       </div>

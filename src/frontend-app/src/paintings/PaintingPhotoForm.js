@@ -12,7 +12,7 @@ class PaintingPhotoForm extends Component {
       title: null,
       src: null,
       apiPaintingPhotosEndpoint: `/api/paintings/photos?`,
-      paintingPhotos: null,
+      // paintingPhotos: null,
     };
   }
   // Note that id in painting model matches title_id in the paintingphoto model 
@@ -149,46 +149,9 @@ class PaintingPhotoForm extends Component {
           src: null,  
       })
   }
-  
-
-  loadUniqueTitleIds = (clickedEndpoint) => {
-   
-    let endpoint = this.state.apiPaintingPhotosEndpoint
- 
-    if (clickedEndpoint !== undefined){
-        endpoint = clickedEndpoint
-    }
-
-    let lookupOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }; 
-    
-    const csrfToken = cookie.load("csrftoken");
-    if (csrfToken !== undefined) {
-      lookupOptions["credentials"] = "include";
-      lookupOptions["headers"]["X-CSRFToken"];
-    }
-    
-    fetch(endpoint, lookupOptions)
-      .then(response => {
-        return response.json();
-      })
-      .then(responseData => {
-        this.setState({
-          paintingPhotos: responseData,
-        });
-        // console.log(responseData);
-      })
-      .catch(error => {
-        console.log("error", error);
-      });
-  }
 
   componentDidMount() {
-    this.loadUniqueTitleIds()
+    // this.loadUniqueTitleIds()
     const { title_id } = this.props;
 
     if (title_id !== undefined) {
@@ -205,10 +168,7 @@ class PaintingPhotoForm extends Component {
     // right now the title_id goes in the title field of the PaintingPhoto model. Try to see if we can switch to slug later
 
 
-    const { title_id } = this.props;
-    const {paintingPhotos} = this.state;
-    // console.log(paintingPhotos)
-    // console.log(typeof(paintingPhotos))
+    const { title_id, allPaintings } = this.props;
 
     return (
       <form onSubmit={this.handleSubmit} ref={(el) => this.paintingCreateForm = el}>
@@ -225,8 +185,8 @@ class PaintingPhotoForm extends Component {
                   >
               <option value="">-</option>
               {
-                    paintingPhotos !== null ? 
-                    paintingPhotos.map((anObjectMapped, index) => 
+                  allPaintings !== null ? 
+                    allPaintings.map((anObjectMapped, index) => 
                       <option value={anObjectMapped.title} >{anObjectMapped.title_name}</option>
                       )
                     : ""

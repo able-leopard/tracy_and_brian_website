@@ -1,0 +1,28 @@
+.container{
+    max-width: 500px;
+}
+
+.input-group{
+    height: 30px;
+}
+  /* 
+  mid-size screen until i-pad 
+  the ipad size really starts at 1250px but I started at 1600px to make everything fit
+  */
+  @media only screen and (max-width: 1600px) and (min-width: 760px){
+
+    .input-group{
+        height: 30px;
+    }
+    
+}
+
+
+  /* Media query for phones */
+  @media only screen and (max-width: 759px) and (min-width: 1px){
+    
+    .input-group{
+        height: 30px;
+    }
+
+}

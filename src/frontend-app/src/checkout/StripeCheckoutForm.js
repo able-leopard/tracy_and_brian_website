@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 import cookie from "react-cookies";
-import { Redirect,  } from 'react-router-dom';
+import { Redirect  } from 'react-router-dom';
+
+import '../css/StripeCheckoutForm.css'
 
 class StripeCheckoutForm extends Component {
     constructor(props) {
@@ -17,8 +19,10 @@ class StripeCheckoutForm extends Component {
         billing_country: "",
         billing_postal_or_zip_code: "",
         total: "",
+        painting_info: "",
         successfulPOST: false,
         disableFormSubmission: false,
+        failedSubmissionAttempted: false,
       }
     }
 
@@ -51,6 +55,7 @@ class StripeCheckoutForm extends Component {
                   billing_province_or_state: responseData.billing_province_or_state,
                   billing_country: responseData.billing_country,
                   billing_postal_or_zip_code: responseData.billing_postal_or_zip_code,
+                  painting_info: responseData.painting_info
                 })
             })
           .catch(error => {
@@ -63,11 +68,19 @@ class StripeCheckoutForm extends Component {
     // This function creates the stripe token as well as sends a bunch of other relavent data to the backend via a POST request
     sendPaymentInfo = async () => {
       
-      if (this.state.disableFormSubmission === false && this.state.total > 0 === true ) {
-      
-        //disable form submission after first click to make sure we don't double charge customers
-        this.setState({disableFormSubmission: true})     
 
+        /* 
+        disable form submission after first click to make sure we don't double charge customers
+        but if customers makes a failed submission attempt, we have to enable to form to let them try again
+        */
+        this.state.failedSubmissionAttempted === false ? this.setState({disableFormSubmission: true})
+        : this.setState({disableFormSubmission: false})
+      if (this.state.disableFormSubmission === false && this.state.total > 0 === true ) {
+
+
+        this.setState({failedSubmissionAttempted: false})
+
+        // this data gets send into the stripe dashboard
         let {token} = await this.props.stripe.createToken({
           name: this.state.name,
           currency: 'cad',
@@ -79,9 +92,12 @@ class StripeCheckoutForm extends Component {
                           :this.state.billing_country==="United States" ? "US" 
                           : ""
         });
-        let total = this.state.total
-        let email = this.state.email
-        let order_id = this.state.order_id
+
+        // this data gets send over to the backend
+        let total           = this.state.total
+        let email           = this.state.email
+        let order_id        = this.state.order_id
+        let painting_info   = this.state.painting_info
 
         const csrfToken = cookie.load("csrftoken");
         const endpoint = "/api/cart/checkout/";
@@ -93,16 +109,22 @@ class StripeCheckoutForm extends Component {
               "Content-Type": "application/json",
               "X-CSRFToken": csrfToken
             },
-            body: JSON.stringify({token, total, email, order_id}),
+            body: JSON.stringify({token, total, email, order_id, painting_info}),
             credentials: "include"
           };
           console.log(token);
           console.log(total);
           console.log(email);
           let response = await fetch(endpoint, lookupOptions);
-          if (response.ok) this.setState({successfulPOST: true});
-          console.log("made successful post")
-          
+          console.log(response)
+          if (response.ok) 
+            {
+              this.setState({successfulPOST: true}), 
+              console.log("made successful post");
+            }
+          else {
+            this.setState({failedSubmissionAttempted: true})
+          }
         }
       }
       else {
@@ -150,7 +172,8 @@ class StripeCheckoutForm extends Component {
             onSubmit={this.handleSubmit}
             className="form-group mt-3 border border-primary rounded shadow-1g p-3"
             > 
-            <h1>Complete Your Purchase</h1>
+            <h4>Complete Your Purchase</h4>
+            <br/>
             <lable>Card Holder Name</lable>
             <input 
               type="text"
@@ -162,8 +185,13 @@ class StripeCheckoutForm extends Component {
             />
             <lable>Amount</lable>
             <a className="input-group my-1 p-1 border border-dark">$ {total} CAD</a>
+            <br/>
+          
+
             <label>CC Number -- Exp. Date -- CVC</label>
             <CardElement />
+           
+            <br/>
             <button 
               className="btn btn-primary border border-dark shadow"
               >

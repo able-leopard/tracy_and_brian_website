@@ -43,7 +43,15 @@ class CartListAPIView(generics.RetrieveUpdateDestroyAPIView):
         cart_obj, new_obj       = Cart.objects.new_or_get(request)        
         serializer              = CartSerializer(cart_obj)
         cart_items              = cart_obj.products.all()
+        # del request.session['cart_id']
+        # del request.session["address_id"]            
+        # del request.session["shipping_address_id"]
+        # del request.session["billing_address_id"]
+        # del request.session["account_id"]
+        # del request.session["billing_profile_id"]
+        # request.session['cart_items'] = 0
 
+        # print(request.session.items())
         """
         doing cart_obj.products wont't return anything because it returns a manager class which you cannot iterate
         https://stackoverflow.com/questions/52428124/django-manytomany-field-returns-none-but-it-has-related-records
@@ -80,7 +88,7 @@ class CartUpdateAPIView(APIView):
 
         # print(dir(request))
         print(request.data)
-        product_id = request.data['products'][0]
+        product_id = request.data['currentPaintingId'][0]
 
         """
         I have to get product_id using request.data instead of request.POST 
@@ -163,6 +171,8 @@ class CheckoutHomeAPIView(APIView):
 
         if shipping_address_id:
             shipping_address_obj                        = Address.objects.get(id=shipping_address_id)
+            order_data['shipping_first_name']           = shipping_address_obj.first_name
+            order_data['shipping_last_name']            = shipping_address_obj.last_name
             order_data['shipping_address_1']            = shipping_address_obj.address_1
             order_data['shipping_city']                 = shipping_address_obj.city 
             order_data['shipping_province_or_state']    = shipping_address_obj.province_or_state
@@ -172,6 +182,8 @@ class CheckoutHomeAPIView(APIView):
             
         if billing_address_id:
             billing_address_obj                         = Address.objects.get(id=billing_address_id)
+            order_data['billing_first_name']            = billing_address_obj.first_name
+            order_data['billing_last_name']             = billing_address_obj.last_name
             order_data['billing_address_1']             = billing_address_obj.address_1
             order_data['billing_city']                  = billing_address_obj.city 
             order_data['billing_province_or_state']     = billing_address_obj.province_or_state
@@ -184,12 +196,12 @@ class CheckoutHomeAPIView(APIView):
             #painting is an m2m relationship in cart
             painting_objects_in_cart                    = cart_obj.products.all()
 
-            #getting the painting title & price and passing it as a tuple to be added to this order summary object
+            #getting the painting title & price and passing it as a list of directionaries to be added to this order summary object
             painting_info = []
             for painting_obj in painting_objects_in_cart.iterator():
                 painting_title = painting_obj.title
                 painting_price = painting_obj.price
-                painting_data  = (painting_title, painting_price)
+                painting_data  = {"painting_title": painting_title, "painting_price": painting_price}
                 painting_info.append(painting_data)
 
             order_data['painting_info']                 = painting_info
@@ -201,16 +213,30 @@ class CheckoutHomeAPIView(APIView):
         # START OF STRIPE PAYMENT CODE
         stripe.api_key = stripe_secret_key
         
-        token       = request.data['token']['id']
-        total       = int(float(request.data['total']))        
-        email       = str(request.data['email'])
-        order_id    = str(request.data['order_id']) 
+        # print(request.data)
+        print(request.data['painting_info'])
+
+
+        token           = request.data['token']['id']
+        total           = int(float(request.data['total']))        
+        email           = str(request.data['email'])
+        order_id        = str(request.data['order_id'])
+        painting_info   = request.data['painting_info'] #this comes in as a list of list of directionaries (look above at get request to see how it was created)
+
+        #looping over the purchased paintings and formatting appropriately to to be send over in the description
+        ordered_paintings = []
+        for i in painting_info:
+            painting_title      = i["painting_title"]
+            painting_price      = i["painting_price"]
+            my_painting_info    = str(painting_title) + ": " + "C$"+str(painting_price)
+            ordered_paintings.append(my_painting_info)
+        my_ordered_paintings = "\n".join(ordered_paintings)
 
         # we have to multiple the amount by 100 because stripe default amounts are in cents 
         charge = stripe.Charge.create(
             amount          = total * 100,
             currency        = 'cad',
-            description     = 'Order ID: '+order_id,
+            description     = 'Order ID: '+order_id+"\n\n"+"PAINTINGS PURCHASED"+"\n"+my_ordered_paintings,
             source          = token,
             receipt_email   = email,
             idempotency_key = order_id #an extra layer of security to make sure we don't double charge

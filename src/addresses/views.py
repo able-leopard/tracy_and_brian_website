@@ -71,21 +71,21 @@ class ShippingAddressUpdateAPIView(APIView):
         else:
             address_obj, new_obj        = Address.objects.new_or_get(request) #1nd empty obj created due to not shipping_address_id       
             serializer                  = AddressSerializer(address_obj)
-            print("printing ShippingAddressUpdateAPIView GET response")
-            print(address_obj)
-            print(new_obj)
-            print(request.session.items())
+  
 
         return Response(serializer.data)
 
     def post(self, request, pk=None, *args, **kwargs):
 
         address_type                    = request.data['address_type']
+        first_name                      = request.data['first_name']
+        last_name                       = request.data['last_name']
         address_1                       = request.data['address_1']
         city                            = request.data['city']
         province_or_state               = request.data['province_or_state']
         country                         = request.data['country']
         postal_or_zip_code              = request.data['postal_or_zip_code']
+        phone                           = request.data['phone']
 
         # checks session to see if there was previous shipping_address object created
         shipping_address_id = request.session.get('shipping_address_id') 
@@ -97,11 +97,14 @@ class ShippingAddressUpdateAPIView(APIView):
             address_obj = qs.first()
 
             address_obj.address_type        = address_type
+            address_obj.first_name          = first_name
+            address_obj.last_name           = last_name
             address_obj.address_1           = address_1
             address_obj.city                = city
             address_obj.province_or_state   = province_or_state
             address_obj.country             = country
             address_obj.postal_or_zip_code  = postal_or_zip_code
+            address_obj.phone               = phone
             address_obj.save()  
             
             # retrieve existing billing profile object, if not create new object
@@ -124,32 +127,17 @@ class ShippingAddressUpdateAPIView(APIView):
         else:
             
             address_obj, new_obj        = Address.objects.new_or_get(request)
-            print("calling Address.objects.new_or_get again")            
-            print(address_obj)
-            print(new_obj)
-            # address_id                      = request.session.get('address_id') 
-            # qs                              = Address.objects.filter(id=address_id)
-            
-            # if qs.count() == 1:
-            # address_obj                     = qs.first()
             
             address_obj.address_type        = address_type
+            address_obj.first_name          = first_name
+            address_obj.last_name           = last_name
             address_obj.address_1           = address_1
             address_obj.city                = city
             address_obj.province_or_state   = province_or_state
             address_obj.country             = country
             address_obj.postal_or_zip_code  = postal_or_zip_code
+            address_obj.phone               = phone
             address_obj.save()  
-
-            # else:
-            #     address_obj = Address.objects.create(
-            #                                         address_type=address_type,
-            #                                         address_1=address_1,
-            #                                         city=city,
-            #                                         province_or_state=province_or_state,
-            #                                         country=country,
-            #                                         postal_or_zip_code=postal_or_zip_code
-            #                                         )
             
             # retrieve existing billing profile object, if not create new object
             billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request) 
@@ -180,8 +168,6 @@ class BillingAddressUpdateAPIView(APIView):
 
         shipping_address_id = request.session.get('shipping_address_id')
         shipping_address_qs = Address.objects.filter(id=shipping_address_id)
-        print("printing shipping address qs transferred to billing")
-        print(shipping_address_qs)
 
         # retrieving previous billing address object if available        
         if billing_address_qs.count() == 1:
@@ -203,11 +189,14 @@ class BillingAddressUpdateAPIView(APIView):
     def post(self, request, pk=None, *args, **kwargs):
 
         address_type                    = request.data['address_type']
+        first_name                      = request.data['first_name']
+        last_name                       = request.data['last_name']
         address_1                       = request.data['address_1']
         city                            = request.data['city']
         province_or_state               = request.data['province_or_state']
         country                         = request.data['country']
         postal_or_zip_code              = request.data['postal_or_zip_code']
+        phone                           = request.data['phone']
 
         # checks session to see if there was previous billing_address object created
         billing_address_id = request.session.get('billing_address_id')
@@ -218,11 +207,14 @@ class BillingAddressUpdateAPIView(APIView):
         if qs.count() == 1:
             address_obj = qs.first()
             address_obj.address_type        = address_type
+            address_obj.first_name          = first_name
+            address_obj.last_name           = last_name
             address_obj.address_1           = address_1
             address_obj.city                = city
             address_obj.province_or_state   = province_or_state
             address_obj.country             = country
             address_obj.postal_or_zip_code  = postal_or_zip_code
+            address_obj.phone               = phone
             address_obj.save()  
             
             serializer                  = AddressSerializer(address_obj)
@@ -231,11 +223,14 @@ class BillingAddressUpdateAPIView(APIView):
         else:
             address_obj = Address.objects.create(
                                         address_type=address_type,
+                                        first_name=first_name,
+                                        last_name=last_name,
                                         address_1=address_1,
                                         city=city,
                                         province_or_state=province_or_state,
                                         country=country,
-                                        postal_or_zip_code=postal_or_zip_code
+                                        postal_or_zip_code=postal_or_zip_code,
+                                        phone=phone
                                         )
 
             request.session['address_id'] = address_obj.id

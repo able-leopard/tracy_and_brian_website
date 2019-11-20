@@ -107,6 +107,7 @@ class PaintingList extends Component {
     return (
       <div className={"list-view"}>
         <h1>Original Paintings</h1>
+        <br/>
         {author === true ? (
           <Link
             className="mr-2"

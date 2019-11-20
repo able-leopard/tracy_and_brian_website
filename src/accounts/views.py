@@ -14,11 +14,7 @@ from .models import GuestEmail
 from billing.models import BillingProfile
 from .serializers import GuestEmailSerializer
 
-"""
-only use POST from AccountUpdateAPIView once
-after have to use PUT from AccountListAPIView
-need to either link a foreign key to Billing model or update the existing email somehow
-"""
+
 
 class AccountListAPIView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -61,10 +57,7 @@ class AccountListAPIView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
 class AccountUpdateAPIView(APIView):
-    """
-    This is the View for a specific item in a specific cart
-    We're mainly using the post method here, the get is not really used but just for show
-    """
+
     permission_classes  = [permissions.AllowAny]
     serializer_class    = GuestEmailSerializer
 

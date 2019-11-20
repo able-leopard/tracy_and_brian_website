@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import CartCreate from "../cart/CartCreate"
+import CartForm from '../cart/CartForm'
+
 import '../css/PaintingDetail.css'
 
 class PaintingInfoTab extends Component {
@@ -10,23 +13,23 @@ class PaintingInfoTab extends Component {
     
     render() { 
 
-        const {title, style, medium, description, artist, price, size_measurements, available, completed_year} = this.props;
+        const {id, slug, title, style, medium, description, artist, price, size_measurements, available, completed_year} = this.props;
         
         return ( 
             <div className={'painting-info-tab-container'}>
                 <h4>By {artist}, {completed_year}</h4>
-                <p>{description}</p>
 
                 <br/>
-                <p>Style: {style}</p>
                 <p>Medium: {medium}</p>
-
-                <br/>
                 <p>Size: {size_measurements}</p>
-                <p>Availability: {available === true ? ("Yes") : ("Sorry not available")}</p>
-                <p>Price: ${parseInt(price).toLocaleString()}</p>
-
-                <h4>ADD TO CART</h4>
+                <br/>          
+                <hr/>      
+                <p>Price: ${parseInt(price).toLocaleString()} CAD</p>
+                <p>Shipping Included</p>
+                <CartForm 
+                    paintingId={id}
+                    slug={slug} 
+                    />
 
             </div>
             );

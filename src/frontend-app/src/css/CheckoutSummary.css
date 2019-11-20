@@ -1,0 +1,53 @@
+.all-contact-info{
+    display: grid;
+    padding-right: 600px;
+}
+
+.address-info{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.address-info td{
+    padding-right: 150px;
+}
+
+
+.email-info{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.email-info td{
+    padding-right: 260px;
+}
+
+
+.all-contact-info button{
+    max-width: 200px;
+
+}
+
+
+
+/* mid-size screen until i-pad */
+@media only screen and (max-width: 1250px) and (min-width: 760px){
+    .all-contact-info{
+        display: grid;
+        padding-right: 0px;
+    }
+  }
+  
+  /* Media query for phones */
+  @media only screen and (max-width: 759px) and (min-width: 1px){
+  
+    .all-contact-info{
+        display: grid;
+        padding-right: 0px;
+    }
+    
+  }

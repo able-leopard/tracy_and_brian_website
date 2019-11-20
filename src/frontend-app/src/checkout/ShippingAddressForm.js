@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "whatwg-fetch";
 import cookie from "react-cookies";
-import '../css/GuestEmailForm.css'
+import '../css/CheckoutForms.css'
 import { Redirect } from 'react-router-dom';
 
 class ShippingAddressForm extends Component {
@@ -9,12 +9,15 @@ class ShippingAddressForm extends Component {
     super(props);
     this.state = {
         address_type: "shipping",
+        first_name: "",
+        last_name: "",
         address_1: "",
         address_2: "",
         city: "",
         province_or_state: "",
         country: "",
         postal_or_zip_code: "",
+        phone: "",
         successfulPOST: false,
     };
   }
@@ -43,11 +46,14 @@ class ShippingAddressForm extends Component {
         })
         .then(responseData => {
           this.setState({
+            first_name: responseData.first_name,
+            last_name: responseData.last_name,
             address_1: responseData.address_1,
             city: responseData.city,
             province_or_state: responseData.province_or_state,
             country: responseData.country,
             postal_or_zip_code: responseData.postal_or_zip_code,
+            phone: responseData.phone,
           })
         })
         .then(responseData => {
@@ -82,12 +88,15 @@ class ShippingAddressForm extends Component {
         })
         .then(responseData => {
           this.setState({
+            first_name: responseData.first_name,
+            last_name: responseData.last_name,
             address_1: responseData.address_1,
             address_2: responseData.address_2,
             city: responseData.city,
             province_or_state: responseData.province_or_state,
             country: responseData.country,
-            postal_or_zip_code: responseData.postal_or_zip_code
+            postal_or_zip_code: responseData.postal_or_zip_code,
+            phone: responseData.phone,
           });
         })
         .catch(error => {
@@ -108,8 +117,7 @@ class ShippingAddressForm extends Component {
 
     if (data !== undefined){
         (
-          this.updateAddress(data),
-          console.log(this.state.address_type)
+          this.updateAddress(data)
         )
     } else {
         ""
@@ -127,7 +135,6 @@ class ShippingAddressForm extends Component {
 
     this.getAddress()
     this.resetSucessfulPOST()
-    console.log("checking when componentDidMount is loaded")
   }
 
   render() {
@@ -136,14 +143,29 @@ class ShippingAddressForm extends Component {
 
 
     const { address_type, 
+            first_name,
+            last_name,
             address_1, 
-            address_2, 
             city, 
             province_or_state, 
             country, 
             postal_or_zip_code,
             billingSameAsShipping,
+            phone,
             successfulPOST } = this.state;
+
+    const all_provinces_and_states = [
+      'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador',
+      'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 
+      'Quebec', 'Saskatchewan', 'Yukon', 
+      'Alabama', 'Alaska', 'Arizona', ' Arkansas', 'California', 'Colorado', 'Connecticut',
+      'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
+      'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
+      'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+      'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma',
+      'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee',
+      'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'                       
+  ] 
     
     // redirect to billing page after successful POST of shipping address
     if (successfulPOST === true)  
@@ -155,13 +177,46 @@ class ShippingAddressForm extends Component {
     else
   
       return (
-        <form onSubmit={this.handleSubmit}>
-          <h1>Shipping Address</h1>
-          <div>            
+        <main className="container">
+          <form 
+            onSubmit={this.handleSubmit}
+            className="form-group mt-3 border border-primary rounded shadow-1g p-3"
+            >
+            <h4>Shipping Information</h4>  
+            <br/>          
+
+            <label>
+                First Name:
+                <input 
+                        className="input-group my-1 p-1 border border-dark"
+                        type="text" 
+                        name="first_name" 
+                        onChange={event => {
+                            this.handleAddressChange(event);
+                          }}
+                        value={first_name}
+                        required="required"
+                        />
+              </label>
+        
+            <label>
+                Last Name:
+                <input 
+                        className="input-group my-1 p-1 border border-dark" 
+                        type="text" 
+                        name="last_name" 
+                        onChange={event => {
+                            this.handleAddressChange(event);
+                          }}
+                        value={last_name}
+                        required="required"
+                        />
+              </label>
+          
               <label>
                   Address:
                   <input 
-                          className="input" 
+                          className="input-group my-1 p-1 border border-dark"
                           type="text" 
                           name="address_1" 
                           onChange={event => {
@@ -171,12 +226,11 @@ class ShippingAddressForm extends Component {
                           required="required"
                           />
               </label>
-          </div>
-          <div>            
+        
               <label>
                   City:
                   <input 
-                          className="input" 
+                          className="input-group my-1 p-1 border border-dark" 
                           type="text" 
                           name="city" 
                           onChange={event => {
@@ -186,40 +240,36 @@ class ShippingAddressForm extends Component {
                           required="required"
                           />
               </label>
-          </div>
-          <div>            
-              <label>
-                  Province/ State:
-                  <input 
-                          className="input" 
-                          type="text" 
-                          name="province_or_state" 
-                          onChange={event => {
-                              this.handleAddressChange(event);
-                            }}
-                          value={province_or_state}
-                          required="required"
-                          />
-              </label>
-          </div>
-          <div>
-          <label for="country">Country</label>
-            <select id="country"
-                    name="country"
-                    className=""
-                    onChange={this.handleAddressChange}
-                    value={country}
-                    required="required">
-              <option value="">-</option>
-              <option value="Canada">Canada</option>
-              <option value="United States">United States</option>
-            </select>
-          </div>
-          <div>            
+              <label for="province_or_state">Province/ State</label>
+              <select id="province_or_state"
+                      name="province_or_state"
+                      className="input-group my-1 p-1 border border-dark"
+                      onChange={this.handleAddressChange}
+                      value={province_or_state}
+                      required="required">
+                <option value="">-</option>
+                {
+                    all_provinces_and_states.map((item) => 
+                      <option value={item} >{item}</option>
+                      )
+                  }
+              </select>
+            <label for="country">Country</label>
+              <select id="country"
+                      name="country"
+                      className="input-group my-1 p-1 border border-dark"
+                      onChange={this.handleAddressChange}
+                      value={country}
+                      required="required">
+                <option value="">-</option>
+                <option value="Canada">Canada</option>
+                <option value="United States">United States</option>
+              </select>
+        
               <label>
                   Postal/ Zip Code:
                   <input 
-                          className="input" 
+                          className="input-group my-1 p-1 border border-dark" 
                           type="text" 
                           name="postal_or_zip_code" 
                           onChange={event => {
@@ -229,10 +279,23 @@ class ShippingAddressForm extends Component {
                           required="required"
                           />
               </label>
-          </div>
-          <button className="btn btn-primary">Confirm & Continue</button>
-
-        </form>
+        
+            <label>
+                Phone Number
+                <input 
+                        className="input-group my-1 p-1 border border-dark" 
+                        type="tel"
+                        name="phone" 
+                        onChange={event => {
+                            this.handleAddressChange(event);
+                          }}
+                        value={phone}
+                        required="required"
+                        />
+            </label>
+            <button className="btn btn-primary">Confirm & Continue</button>
+          </form>
+        </main>
       );
   }
 }

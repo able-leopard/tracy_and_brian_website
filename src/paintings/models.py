@@ -36,8 +36,8 @@ class Painting(models.Model):
     )
 
     ARTIST_CHOICES = (
-        ('brian', 'brian'),
-        ('tracy', 'tracy'),
+        ('Brian', 'Brian'),
+        ('Tracy', 'Tracy'),
     )
     
     user                        = models.ForeignKey(settings.AUTH_USER_MODEL, default="", on_delete=models.CASCADE)

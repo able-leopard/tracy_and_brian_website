@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
+import cookie from "react-cookies";
+
 import { BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
 import { createBrowserHistory } from 'history'
+import { Navbar, Nav } from 'react-bootstrap';
+
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { faShoppingCart } from '@fortawesome/fontawesome-free-solid'
 
 import PaintingList from './paintings/PaintingList';
 import PaintingDetail from './paintings/PaintingDetail';
@@ -9,7 +15,6 @@ import PaintingCreate from './paintings/PaintingCreate';
 import CartList from './cart/CartList'
 
 import GuestEmailForm from './checkout/GuestEmailForm'
-import AddressCreate from './checkout/AddressCreate'
 import ShippingAddressForm from './checkout/ShippingAddressForm'
 import BillingAddressForm from './checkout/BillingAddressForm'
 import CheckoutSummary from './checkout/CheckoutSummary'
@@ -21,10 +26,29 @@ import PurchaseComplete from './checkout/PurchaseComplete'
 
 class App extends Component {
 
+    // some code for React Nav Bar: https://react-bootstrap.github.io/components/navbar/
+
   render() {
 
     return (
+
       <BrowserRouter history={createBrowserHistory}>
+        <Navbar className="my-nav" bg="light" expand="lg" fixed="top">
+          <Navbar.Brand>Tracy and Brian's Website</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link href="/">Home</Nav.Link>
+            </Nav>
+            <Nav className="mr-left">
+              <Nav.Link href="/paintings/cart"><FontAwesomeIcon icon={faShoppingCart} /></Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <br/>
+        <br/>
+        <hr/>
+
         <Switch>   
         <Route exact path='/' component={PaintingList}/>
         <Route exact path='/paintings' component={PaintingList}/>

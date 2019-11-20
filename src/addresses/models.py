@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save, post_save, m2m_changed
 from billing.models import BillingProfile
-
+from phonenumber_field.modelfields import PhoneNumberField
 
 User = settings.AUTH_USER_MODEL
 
@@ -60,12 +60,15 @@ class Address(models.Model):
     user                         = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     billing_profile              = models.ForeignKey(BillingProfile, null=True, blank=True, on_delete=models.CASCADE)
     address_type                 = models.CharField(max_length=120, null=True, blank=True)
+    first_name                   = models.CharField(max_length=120, null=True, blank=True)
+    last_name                    = models.CharField(max_length=120, null=True, blank=True)
     address_1                    = models.CharField(max_length=120, null=True, blank=True)
     address_2                    = models.CharField(max_length=120, null=True, blank=True)
     city                         = models.CharField(max_length=120, null=True, blank=True)
     province_or_state            = models.CharField(max_length=120, null=True, blank=True)
     country                      = models.CharField(max_length=120, choices=COUNTRY_CHOICES, null=True, blank=True)
     postal_or_zip_code           = models.CharField(max_length=120, null=True, blank=True)
+    phone                        = models.CharField(max_length=12, null=True, blank=True)
 
     objects = AddressManager()
 

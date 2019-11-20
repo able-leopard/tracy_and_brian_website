@@ -30,7 +30,6 @@ class PaintingInline extends Component {
                     </Link>
                     <h6>{paintingItem.title}</h6>
                     <a>{paintingItem.size_measurements}</a>   
-                    <a>{paintingItem.artist}</a>
                     <a>${parseInt(paintingItem.price).toLocaleString()}</a>
 
                  </div>
