@@ -178,6 +178,7 @@ class CheckoutHomeAPIView(APIView):
             order_data['shipping_province_or_state']    = shipping_address_obj.province_or_state
             order_data['shipping_country']              = shipping_address_obj.country
             order_data['shipping_postal_or_zip_code']   = shipping_address_obj.postal_or_zip_code
+            order_data['shipping_phone']                = shipping_address_obj.phone
 
             
         if billing_address_id:
@@ -189,6 +190,7 @@ class CheckoutHomeAPIView(APIView):
             order_data['billing_province_or_state']     = billing_address_obj.province_or_state
             order_data['billing_country']               = billing_address_obj.country
             order_data['billing_postal_or_zip_code']    = billing_address_obj.postal_or_zip_code
+            order_data['billing_phone']                 = billing_address_obj.phone
 
         if cart_id:
             cart_obj                                    = Cart.objects.get(id=cart_id)
@@ -214,14 +216,33 @@ class CheckoutHomeAPIView(APIView):
         stripe.api_key = stripe_secret_key
         
         # print(request.data)
-        print(request.data['painting_info'])
+        print(request.data)
+        print(request.data['data'])
 
-
+        #getting the main data to be send over the stripe
         token           = request.data['token']['id']
-        total           = int(float(request.data['total']))        
-        email           = str(request.data['email'])
-        order_id        = str(request.data['order_id'])
-        painting_info   = request.data['painting_info'] #this comes in as a list of list of directionaries (look above at get request to see how it was created)
+        total           = int(float(request.data['data']['total']))        
+        email           = str(request.data['data']['email'])
+        order_id        = str(request.data['data']['order_id'])
+        painting_info   = request.data['data']['painting_info'] #this comes in as a list of list of directionaries (look above at get request to see how it was created)
+
+        #getting the metadata to be sent over to stripe 
+        shipping_first_name         = request.data['data']['shipping_first_name']
+        shipping_last_name          = request.data['data']['shipping_last_name']
+        shipping_address_1          = request.data['data']['shipping_address_1']
+        shipping_city               = request.data['data']['shipping_city']
+        shipping_province_or_state  = request.data['data']['shipping_province_or_state']
+        shipping_country            = request.data['data']['shipping_country'] 
+        shipping_postal_or_zip_code = request.data['data']['shipping_postal_or_zip_code']
+        shipping_phone              = request.data['data']['shipping_phone']
+        billing_first_name          = request.data['data']['billing_first_name'] 
+        billing_last_name           = request.data['data']['billing_last_name'] 
+        billing_address_1           = request.data['data']['billing_address_1'] 
+        billing_city                = request.data['data']['billing_city'] 
+        billing_province_or_state   = request.data['data']['billing_province_or_state'] 
+        billing_country             = request.data['data']['billing_country'] 
+        billing_postal_or_zip_code  = request.data['data']['billing_postal_or_zip_code'] 
+        billing_phone               = request.data['data']['billing_phone'] 
 
         #looping over the purchased paintings and formatting appropriately to to be send over in the description
         ordered_paintings = []
@@ -239,7 +260,26 @@ class CheckoutHomeAPIView(APIView):
             description     = 'Order ID: '+order_id+"\n\n"+"PAINTINGS PURCHASED"+"\n"+my_ordered_paintings,
             source          = token,
             receipt_email   = email,
-            idempotency_key = order_id #an extra layer of security to make sure we don't double charge
+            idempotency_key = order_id, #an extra layer of security to make sure we don't double charge
+            metadata        = {
+                                'email': email,
+                                'shipping_first_name': shipping_first_name,
+                                'shipping_last_name': shipping_last_name,
+                                'shipping_address_1': shipping_address_1,
+                                'shipping_city': shipping_city,
+                                'shipping_province_or_state': shipping_province_or_state,
+                                'shipping_country': shipping_country,
+                                'shipping_postal_or_zip_code': shipping_postal_or_zip_code,
+                                'shipping_phone': shipping_phone,
+                                'billing_first_name': billing_first_name,
+                                'billing_last_name': billing_last_name,
+                                'billing_address_1': billing_address_1,
+                                'billing_city': billing_address_1,
+                                'billing_province_or_state': billing_province_or_state,
+                                'billing_country': billing_country,
+                                'billing_postal_or_zip_code': billing_postal_or_zip_code,
+                                'billing_phone': billing_phone
+                                }
         )
         #stripe docs on email receipts: https://stripe.com/docs/receipts
         #stripe docs on idempotent key: https://stripe.com/docs/api/idempotent_requests

@@ -12,12 +12,22 @@ class StripeCheckoutForm extends Component {
         order_id: "",
         email: "",
         name: "",
-        amount: "",
+        shipping_first_name: "",
+        shipping_last_name: "",
+        shipping_address_1: "",
+        shipping_city: "",
+        shipping_province_or_state: "",
+        shipping_country: "",
+        shipping_postal_or_zip_code: "",
+        shipping_phone: "",
+        billing_first_name: "",
+        billing_last_name: "",
         billing_address_1: "",
         billing_city: "",
         billing_province_or_state: "",
         billing_country: "",
         billing_postal_or_zip_code: "",
+        billing_phone: "",
         total: "",
         painting_info: "",
         successfulPOST: false,
@@ -50,11 +60,22 @@ class StripeCheckoutForm extends Component {
                   order_id: responseData.order_id, 
                   email: responseData.email,
                   total: responseData.total,
+                  shipping_first_name: responseData.shipping_first_name,
+                  shipping_last_name: responseData.shipping_last_name,
+                  shipping_address_1: responseData.shipping_address_1,
+                  shipping_city: responseData.shipping_city,
+                  shipping_province_or_state: responseData.shipping_province_or_state,
+                  shipping_country: responseData.shipping_country,
+                  shipping_postal_or_zip_code: responseData.shipping_postal_or_zip_code,
+                  shipping_phone: responseData.shipping_phone,
+                  billing_first_name: responseData.billing_first_name,
+                  billing_last_name: responseData.billing_last_name,
                   billing_address_1: responseData.billing_address_1,
                   billing_city: responseData.billing_city,
                   billing_province_or_state: responseData.billing_province_or_state,
                   billing_country: responseData.billing_country,
                   billing_postal_or_zip_code: responseData.billing_postal_or_zip_code,
+                  billing_phone: responseData.billing_phone,
                   painting_info: responseData.painting_info
                 })
             })
@@ -66,9 +87,8 @@ class StripeCheckoutForm extends Component {
     };
 
     // This function creates the stripe token as well as sends a bunch of other relavent data to the backend via a POST request
-    sendPaymentInfo = async () => {
+    sendPaymentInfo = async (data) => {
       
-
         /* 
         disable form submission after first click to make sure we don't double charge customers
         but if customers makes a failed submission attempt, we have to enable to form to let them try again
@@ -94,10 +114,10 @@ class StripeCheckoutForm extends Component {
         });
 
         // this data gets send over to the backend
-        let total           = this.state.total
-        let email           = this.state.email
-        let order_id        = this.state.order_id
-        let painting_info   = this.state.painting_info
+        // let total           = this.state.total
+        // let email           = this.state.email
+        // let order_id        = this.state.order_id
+        // let painting_info   = this.state.painting_info
 
         const csrfToken = cookie.load("csrftoken");
         const endpoint = "/api/cart/checkout/";
@@ -109,12 +129,12 @@ class StripeCheckoutForm extends Component {
               "Content-Type": "application/json",
               "X-CSRFToken": csrfToken
             },
-            body: JSON.stringify({token, total, email, order_id, painting_info}),
+            body: JSON.stringify({token, data}),
             credentials: "include"
           };
           console.log(token);
-          console.log(total);
-          console.log(email);
+          console.log(data);
+          
           let response = await fetch(endpoint, lookupOptions);
           console.log(response)
           if (response.ok) 
@@ -150,7 +170,18 @@ class StripeCheckoutForm extends Component {
 
     handleSubmit = (e) => {
       e.preventDefault();  
-      this.sendPaymentInfo()        
+       
+      let data = this.state;
+
+      if (data !== undefined){
+          (
+            this.sendPaymentInfo(data)
+          )
+      } else {
+          ""
+      }
+      
+
     }
     
     componentDidMount() {

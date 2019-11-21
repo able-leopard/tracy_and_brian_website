@@ -20,6 +20,7 @@ class CheckoutSummary extends Component {
       shipping_province_or_state: "",
       shipping_country: "",
       shipping_postal_or_zip_code: "",
+      shipping_phone: "",
       billing_first_name: "",
       billing_last_name: "",
       billing_address_1: "",
@@ -27,6 +28,7 @@ class CheckoutSummary extends Component {
       billing_province_or_state: "",
       billing_country: "",
       billing_postal_or_zip_code: "",
+      billing_phone: "",
     };
   }
 
@@ -63,6 +65,7 @@ class CheckoutSummary extends Component {
               shipping_province_or_state: responseData.shipping_province_or_state,
               shipping_country: responseData.shipping_country,
               shipping_postal_or_zip_code: responseData.shipping_postal_or_zip_code,
+              shipping_phone: responseData.shipping_phone,
               billing_first_name: responseData.billing_first_name,
               billing_last_name: responseData.billing_last_name,
               billing_address_1: responseData.billing_address_1,
@@ -70,6 +73,7 @@ class CheckoutSummary extends Component {
               billing_province_or_state: responseData.billing_province_or_state,
               billing_country: responseData.billing_country,
               billing_postal_or_zip_code: responseData.billing_postal_or_zip_code,
+              billing_phone: responseData.billing_phone,
             })
         })
         .then(responseData => {
@@ -112,6 +116,7 @@ class CheckoutSummary extends Component {
                 shipping_province_or_state: responseData.shipping_province_or_state,
                 shipping_country: responseData.shipping_country,
                 shipping_postal_or_zip_code: responseData.shipping_postal_or_zip_code,
+                shipping_phone: responseData.shipping_phone,
                 billing_first_name: responseData.billing_first_name,
                 billing_last_name: responseData.billing_last_name,
                 billing_address_1: responseData.billing_address_1,
@@ -119,6 +124,7 @@ class CheckoutSummary extends Component {
                 billing_province_or_state: responseData.billing_province_or_state,
                 billing_country: responseData.billing_country,
                 billing_postal_or_zip_code: responseData.billing_postal_or_zip_code,
+                billing_phone: responseData.billing_phone,
               })
           })
         .catch(error => {
@@ -143,8 +149,10 @@ class CheckoutSummary extends Component {
   render() {
 
     const { email, 
-            shipping_first_name, shipping_last_name, shipping_address_1, shipping_city, shipping_province_or_state, shipping_country, shipping_postal_or_zip_code,
-            billing_first_name, billing_last_name, billing_address_1, billing_city, billing_province_or_state, billing_country, billing_postal_or_zip_code,
+            shipping_first_name, shipping_last_name, shipping_address_1, shipping_city, shipping_province_or_state, 
+            shipping_country, shipping_postal_or_zip_code, shipping_phone,
+            billing_first_name, billing_last_name, billing_address_1, billing_city, billing_province_or_state, 
+            billing_country, billing_postal_or_zip_code, billing_phone
           } = this.state
 
     return (
@@ -205,6 +213,10 @@ class CheckoutSummary extends Component {
                     <td>Postal Code/ Zip Code:</td>
                     <td>{shipping_postal_or_zip_code}</td>
                   </tr>
+                  <tr>
+                    <td>Shipping Phone:</td>
+                    <td>{shipping_phone}</td>
+                  </tr>
                 </table>
               </div>
               <hr/>
@@ -242,6 +254,10 @@ class CheckoutSummary extends Component {
                   <tr>
                     <td>Postal Code/ Zip Code:</td>
                     <td>{billing_postal_or_zip_code}</td>
+                  </tr>
+                  <tr>
+                    <td>Billing Phone:</td>
+                    <td>{billing_phone}</td>
                   </tr>
                 </table>
               </div>
