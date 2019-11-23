@@ -24,12 +24,14 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='react.html')),
     re_path(r'^paintings', TemplateView.as_view(template_name='react.html')),
     re_path(r'^checkout', TemplateView.as_view(template_name='react.html')),
+    re_path(r'^bio', TemplateView.as_view(template_name='react.html')),
     path('admin/', admin.site.urls),
     path('api/paintings/', include('paintings.urls')),
     path('api/cart/', include('cart.urls')),
     path('api/billing/', include('billing.urls')),
     path('api/account/', include('accounts.urls')),
     path('api/address/', include('addresses.urls')),
+    path('api/bio/', include('bio.urls')),
 ]
 
 #remember to include this if you want to show images

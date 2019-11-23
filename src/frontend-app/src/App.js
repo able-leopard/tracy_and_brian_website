@@ -21,6 +21,7 @@ import CheckoutSummary from './checkout/CheckoutSummary'
 import StripeCheckout from './checkout/StripeCheckout'
 import PurchaseComplete from './checkout/PurchaseComplete'
 
+import Bio from './bio/Bio'
 
 // go to edit t_and_b_paintings/urls.py if you wish to add more routes other than paintings
 
@@ -39,6 +40,7 @@ class App extends Component {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="/bio">Meet Tracy and Brian</Nav.Link>
             </Nav>
             <Nav className="mr-left">
               <Nav.Link href="/paintings/cart"><FontAwesomeIcon icon={faShoppingCart} /></Nav.Link>
@@ -61,6 +63,7 @@ class App extends Component {
         <Route exact path='/checkout/summary' component={CheckoutSummary}/>
         <Route exact path='/checkout/payment' component={StripeCheckout}/>
         <Route exact path='/checkout/purchasecomplete' component={PurchaseComplete}/>
+        <Route exact path='/bio' component={Bio}/>
         </Switch>
       </BrowserRouter>
     );

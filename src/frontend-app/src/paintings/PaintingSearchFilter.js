@@ -237,7 +237,7 @@ class PaintingSearchFiler extends Component {
                     </div>
                     <div className="filter-item">
                         <input type="checkbox"
-                                value="brian|"
+                                value="Brian|"
                                 name="artistFilters"
                                 onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
                                 />
@@ -245,7 +245,7 @@ class PaintingSearchFiler extends Component {
                     </div>
                     <div className="filter-item">
                         <input  type="checkbox"
-                            value="tracy|"
+                            value="Tracy|"
                             name="artistFilters"                      
                             onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
                             />

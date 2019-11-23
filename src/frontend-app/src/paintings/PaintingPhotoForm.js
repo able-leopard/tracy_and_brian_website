@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "whatwg-fetch";
 import cookie from "react-cookies";
-import moment from "moment";
 
 import '../css/PaintingForm.css'
 
