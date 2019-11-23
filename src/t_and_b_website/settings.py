@@ -14,6 +14,17 @@ import os
 
 import environ
 
+# reading env files documentation:
+# https://django-environ.readthedocs.io/en/latest/
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+# reading .env file
+environ.Env.read_env()
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
@@ -23,12 +34,12 @@ SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'vts2_r1e=-@%!0*8(!-qxlro^#(z$-eb_9%2$khc61+t478m_l'
+AWS_ACCESS_KEY_ID = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'testserver']
+ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 'https://t-and-b-website.herokuapp.com/']
 
 
 # Application definition
@@ -141,12 +152,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+
 #BASE_DIR is where manage.py lives
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'staticfiles'), 
 ]
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static-cdn-local')
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticfiles')
 
 #MEDIA_ROOT is for directory for any media that our users upload
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media_cdn')
@@ -179,15 +191,7 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Token',
 }
 
-# reading env files documentation:
-# https://django-environ.readthedocs.io/en/latest/
 
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
-# reading .env file
-environ.Env.read_env()
 
 # django storages documentation:
 # https://django-storages.readthedocs.io/en/latest/
