@@ -1,1 +1,1 @@
-web: gunicorn t_and_b_website.wsgi
+web: gunicorn /src/t_and_b_website/t_and_b_website.wsgi
