@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import django-environ
+
+import environ
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
@@ -24,7 +26,7 @@ SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'vts2_r1e=-@%!0*8(!-qxlro^#(z$-eb_9%2$khc61+t478m_l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'testserver']
 
@@ -177,11 +179,15 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Token',
 }
 
+# reading env files documentation:
+# https://django-environ.readthedocs.io/en/latest/
 
-# importing .env file solution here:
-# https://stackoverflow.com/questions/56011050/how-to-import-environment-variables-to-django-from-local-file
-env = environ.Env()
-env.read_env(env.str('ENV_PATH', '.env'))
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+# reading .env file
+environ.Env.read_env()
 
 # django storages documentation:
 # https://django-storages.readthedocs.io/en/latest/
@@ -194,3 +200,4 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
