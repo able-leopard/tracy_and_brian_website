@@ -54,6 +54,8 @@ ENV/
 env.bak/
 venv.bak/
 /src/t_and_b_website/.env
+/src/cart/.env
+
 
 # Unit test / coverage reports
 htmlcov/
