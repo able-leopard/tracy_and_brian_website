@@ -196,6 +196,9 @@ JWT_AUTH = {
 # django storages documentation:
 # https://django-storages.readthedocs.io/en/latest/
 
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+
+
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')

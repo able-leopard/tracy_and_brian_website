@@ -25,7 +25,6 @@ from billing.serializers import BillingProfileSerializer
 from paintings.serializers import PaintingSerializer
 
 import stripe
-import environ
 
 
 class CartListAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -215,15 +214,15 @@ class CheckoutHomeAPIView(APIView):
 
         # START OF STRIPE PAYMENT CODE
 
-        env = environ.Env(
-            # set casting, default value
-            DEBUG=(bool, False)
-        )
-        # reading .env file
-        environ.Env.read_env()
+        # env = environ.Env(
+        #     # set casting, default value
+        #     DEBUG=(bool, False)
+        # )
+        # # reading .env file
+        # environ.Env.read_env()
 
-        STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
-        stripe.api_key = STRIPE_SECRET_KEY
+        # STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+        stripe.api_key = "sk_test_hqZxQTYC5Gif7ClgQ8EOAms700n2uPMW2s"
         
         # print(request.data)
         print(request.data)
