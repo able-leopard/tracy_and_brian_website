@@ -40,7 +40,7 @@ SECRET_KEY = env('SECRET_KEY')
 # DEBUG_VALUE = env('DEBUG_VALUE')
 
 #debug will be set to false if the env variable is anything other than 'True'
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 't-and-b-website.herokuapp.com']
 
@@ -167,6 +167,8 @@ STATIC_URL = '/static/'
 # ]
 
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #MEDIA_ROOT is for directory for any media that our users upload
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media_cdn')
