@@ -155,9 +155,11 @@ USE_TZ = True
 
 #BASE_DIR is where manage.py lives
 STATIC_URL = '/static/'
+
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, 'staticfiles'), 
-]
+# ]
+
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticfiles')
 
 #MEDIA_ROOT is for directory for any media that our users upload
