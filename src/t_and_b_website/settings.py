@@ -40,7 +40,7 @@ SECRET_KEY = env('SECRET_KEY')
 # DEBUG_VALUE = env('DEBUG_VALUE')
 
 #debug will be set to false if the env variable is anything other than 'True'
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 't-and-b-website.herokuapp.com']
 
