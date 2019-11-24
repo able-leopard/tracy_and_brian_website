@@ -33,8 +33,7 @@ urlpatterns = [
     path('api/account/', include('accounts.urls')),
     path('api/address/', include('addresses.urls')),
     path('api/bio/', include('bio.urls')),
-    re_path(r'^static/(?P.*)$', serve, {'document_root': settings.STATIC_ROOT}),
-           
+    # re_path(r'^static/(?P.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 ]
 
 #remember to include this if you want to show images
