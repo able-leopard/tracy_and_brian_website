@@ -20,6 +20,7 @@ from django.views.static import serve
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.urls import path, include, re_path
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='react.html')),
@@ -33,8 +34,8 @@ urlpatterns = [
     path('api/account/', include('accounts.urls')),
     path('api/address/', include('addresses.urls')),
     path('api/bio/', include('bio.urls')),
-    # re_path(r'^static/(?P.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 ]
+
 
 #remember to include this if you want to show images
 if settings.DEBUG:
