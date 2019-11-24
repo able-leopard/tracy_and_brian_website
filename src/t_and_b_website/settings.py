@@ -104,12 +104,14 @@ WSGI_APPLICATION = 't_and_b_website.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+DATABASE_PASSWORD = env('DATABASE_PASSWORD')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 't_and_b_website',
         'USER': 'postgres',
-        'PASSWORD': 'Spring2018',
+        'PASSWORD': DATABASE_PASSWORD,
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
