@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-
 import environ
+import django_heroku 
 
 # reading env files documentation:
 # https://django-environ.readthedocs.io/en/latest/
@@ -208,3 +208,4 @@ AWS_DEFAULT_ACL = None
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+django_heroku.settings(locals())
