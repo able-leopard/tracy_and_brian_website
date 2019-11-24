@@ -37,10 +37,10 @@ SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG_VALUE = env('DEBUG_VALUE')
+# DEBUG_VALUE = env('DEBUG_VALUE')
 
 #debug will be set to false if the env variable is anything other than 'True'
-DEBUG = (DEBUG_VALUE == "True")
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 't-and-b-website.herokuapp.com']
 
