@@ -224,11 +224,6 @@ class CheckoutHomeAPIView(APIView):
 
         STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
         stripe.api_key = STRIPE_SECRET_KEY
-        # "sk_test_hqZxQTYC5Gif7ClgQ8EOAms700n2uPMW2s"
-        
-        # print(request.data)
-        print(request.data)
-        print(request.data['data'])
 
         #getting the main data to be send over the stripe
         token           = request.data['token']['id']
