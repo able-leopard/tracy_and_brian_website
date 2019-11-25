@@ -46,7 +46,7 @@ SECRET_KEY = env('SECRET_KEY')
 #debug will be set to false if the env variable is anything other than 'True'
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 't-and-b-website.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 't-and-b-website.herokuapp.com', 'http://tracyandbrianart.com/', 'https://tracyandbrianart.com/']
 
 
 # Application definition
