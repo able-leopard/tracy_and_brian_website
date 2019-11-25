@@ -14,6 +14,10 @@ import os
 import environ
 import django_heroku 
 
+# forcing https
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # reading env files documentation:
 # https://django-environ.readthedocs.io/en/latest/
 
@@ -70,6 +74,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'sslify.middleware.SSLifyMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -201,13 +206,10 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Token',
 }
 
-
-
 # django storages documentation:
 # https://django-storages.readthedocs.io/en/latest/
 
 STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
-
 
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
@@ -219,3 +221,5 @@ AWS_DEFAULT_ACL = None
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 django_heroku.settings(locals())
+
+
