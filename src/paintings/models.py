@@ -45,6 +45,7 @@ class Painting(models.Model):
     slug                        = models.SlugField(blank=True, null=True)
     style                       = models.CharField(blank=True, null=True, default="", max_length=255, choices=STYLE_CHOICES)     
     description                 = models.TextField(blank=True, null=True, default="")
+    medium                      = models.CharField(blank=True, null=True, default="", max_length=255)
     size_measurements           = models.CharField(blank=True, null=True, default="", max_length=255) 
     size_class                  = models.CharField(blank=True, null=True, default="", max_length=255, choices=SIZE_CLASS_CHOICES) #this field might be invisible when display but will be used in filtering search later
     artist                      = models.CharField(blank=True, null=True, default="", max_length=255, choices=ARTIST_CHOICES)
