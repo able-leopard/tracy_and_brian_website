@@ -14,10 +14,6 @@ import os
 import environ
 import django_heroku 
 
-# forcing https
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 # reading env files documentation:
 # https://django-environ.readthedocs.io/en/latest/
 
@@ -223,3 +219,6 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 django_heroku.settings(locals())
 
 
+# forcing https
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
