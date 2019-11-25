@@ -22,8 +22,7 @@ class PaintingInfoTab extends Component {
                 <br/>
                 <p>Medium: {medium}</p>
                 <p>Size: {size_measurements}</p>
-                <br/>          
-                <br/>          
+                <br/>                  
                 <p>{description}</p>
                 <hr/>     
                 <p>Price: ${parseInt(price).toLocaleString()} CAD</p>
