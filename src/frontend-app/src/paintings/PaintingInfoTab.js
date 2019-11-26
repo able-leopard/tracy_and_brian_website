@@ -22,16 +22,15 @@ class PaintingInfoTab extends Component {
                 <br/>
                 <p>Medium: {medium}</p>
                 <p>Size: {size_measurements}</p>
-                <br/>                  
+                <br/>          
                 <p>{description}</p>
-                <hr/>     
+                <hr/>      
                 <p>Price: ${parseInt(price).toLocaleString()} CAD</p>
                 <p>Shipping Included</p>
                 <CartForm 
                     paintingId={id}
                     slug={slug} 
                     />
-
             </div>
             );
     }

@@ -52,10 +52,12 @@ class PaintingPhoto extends Component {
                                     className={index === this.state.clickedImageIndex ? "image-preview-border" : ""}
                     />  
                     ))}
-                </div>        
-                <img    className={"detail-view-main-image"}
-                        src={mySrcs[this.state.clickedImageIndex].src}
-                />
+                </div>
+                <div className={"detail-view-main-image"}>        
+                    <img    
+                            src={mySrcs[this.state.clickedImageIndex].src}
+                    />
+                </div>
             </div>
 
         );
