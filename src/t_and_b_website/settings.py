@@ -24,7 +24,6 @@ env = environ.Env(
 # reading .env file
 environ.Env.read_env()
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
@@ -40,13 +39,12 @@ SECRET_KEY = env('SECRET_KEY')
 # DEBUG_VALUE = env('DEBUG_VALUE')
 
 #debug will be set to false if the env variable is anything other than 'True'
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 't-and-b-website.herokuapp.com', 'http://tracyandbrianart.com/', 'https://tracyandbrianart.com/']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -66,7 +64,6 @@ INSTALLED_APPS = [
     'orders',
     'bio',
     'storages',
-
 ]
 
 MIDDLEWARE = [
@@ -104,7 +101,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 't_and_b_website.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
@@ -139,8 +135,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -154,10 +148,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
 
 #BASE_DIR is where manage.py lives
 STATIC_URL = '/static/'
@@ -182,8 +174,6 @@ CORS_ORIGIN_WHITELIST = (
     'your-domain.com',
     'your-bucket-here.s3-us-west-2.amazonaws.com',
 )
-
-
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -216,7 +206,6 @@ AWS_DEFAULT_ACL = None
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 django_heroku.settings(locals())
-
 
 # forcing https
 SECURE_SSL_REDIRECT = False
