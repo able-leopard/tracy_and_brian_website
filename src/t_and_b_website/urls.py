@@ -21,12 +21,16 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.urls import path, include, re_path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.generic.base import RedirectView
+
+favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='react.html')),
     re_path(r'^paintings', TemplateView.as_view(template_name='react.html')),
     re_path(r'^checkout', TemplateView.as_view(template_name='react.html')),
     re_path(r'^bio', TemplateView.as_view(template_name='react.html')),
+    re_path(r'^favicon\.ico$', favicon_view),
     path('admin/', admin.site.urls),
     path('api/paintings/', include('paintings.urls')),
     path('api/cart/', include('cart.urls')),
