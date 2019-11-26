@@ -67,23 +67,15 @@ class Bio extends Component {
                 <h1>Our Story</h1>
                 <br/>
                 <p>
-                Brian is an award-winning abstract painter who comes from a long line of artists and 
-                grew up in Montreal, Canada. She worked for many years as a graphic designer, ensconced in a life 
-                of technology and marketing. In 2011, she gave up a regular paycheque to pursue her love of painting 
-                full time. She now has a studio an hour north of Montreal and is represented by galleries in Canada 
-                and the States. 
+                Brian is an painter for over 10 years, currently residing in Niagara Falls, Canada.
                 </p>
                 <br/>
                 <p>
-                Claire launched her collection of women's art apparel, Claire Desjardins by Carré Noir 
-                in early 2019. It is currently being sold in about 500 boutiques across North America (click here 
-                to find stores in your area). She also sells her original artworks on her website.
+                Tracy is an painter for over 10 years, currently residing in Niagara Falls, Canada.
                 </p>
                 <br/>
                 <p>
-                Claire launched her collection of women's art apparel, Claire Desjardins by Carré Noir 
-                in early 2019. It is currently being sold in about 500 boutiques across North America (click here 
-                to find stores in your area). She also sells her original artworks on her website.
+                They paint landscape, abstract, portraits, and other paintings.
                 </p>
             </div>
          );
