@@ -10,6 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+"""
+Things to change in production vs development:
+1. Turn off debug via debug=False in production (will take care of this via my .env file)
+2. Comment out the STATICFILES_DIRS while in development mode or it won't work
+3. Set SECURE_SSL_REDIRECT = True in production. (will also handle this via env file)
+   When switch back to development, turn it to False, comment out SECURE_PROXY_SSL_HEADER, and clear cached files in browser to make it work. 
+
+* Remember all the environment variables are set via the .env file in development and set via heroku config when in production
+"""
+
+
 import os
 import environ
 import django_heroku 
@@ -36,10 +47,8 @@ SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG_VALUE = env('DEBUG_VALUE')
-
-#debug will be set to false if the env variable is anything other than 'True'
-DEBUG = False
+# debug will be set to false if the env variable is anything other than 'True' (have to do it this way because value needs to be boolean instead of string)
+DEBUG = (env('DEBUG_VALUE') == "True")
 
 ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 't-and-b-website.herokuapp.com', 'http://tracyandbrianart.com/', 'https://tracyandbrianart.com/']
 
@@ -154,6 +163,8 @@ USE_TZ = True
 #BASE_DIR is where manage.py lives
 STATIC_URL = '/static/'
 
+# this has to be commented out during development mode
+# full solution of dealing with the procfile here
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'staticfiles'), 
 ]
@@ -207,6 +218,10 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 django_heroku.settings(locals())
 
-# forcing https
-SECURE_SSL_REDIRECT = False
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# forcing https instead of http
+
+# SECURE_SSL_REDIRECT will be set to false if the env variable is anything other than 'True' (have to do it this way because value needs to be boolean instead of string)
+SECURE_SSL_REDIRECT = (env('SECURE_SSL_REDIRECT_VALUE') == "True")
+
+#remember to commend this part out in development model
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
