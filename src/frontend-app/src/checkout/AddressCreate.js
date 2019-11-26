@@ -1,14 +1,10 @@
-import React, { Component } from 'react';
-import ShippingAddressForm from './ShippingAddressForm'
-import BillingAddressForm from './BillingAddressForm'
+import React, { Component } from "react";
+import ShippingAddressForm from "./ShippingAddressForm";
+import BillingAddressForm from "./BillingAddressForm";
 
 class AddressCreate extends Component {
-  
-  render() { 
-    
-    const {paintingId, slug} = this.props
-
-    return ( 
+  render() {
+    return (
       <div>
         <h1>Shipping Address</h1>
         <ShippingAddressForm />
@@ -16,9 +12,8 @@ class AddressCreate extends Component {
         <h1>Billing Address</h1>
         <BillingAddressForm />
       </div>
-     );
+    );
   }
 }
- 
-export default AddressCreate;
 
+export default AddressCreate;

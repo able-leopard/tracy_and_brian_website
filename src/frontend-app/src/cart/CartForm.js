@@ -23,8 +23,8 @@ class CartForm extends Component {
   // either adding or removing the item coming from data into cart send sending it to the REST api
   // Important to note that the paintingId must be in the currentPaintingId[] before sending the data through or else the backend won't know what to do
   // this.getCart() also gets called in this
-  updateCart = (data) => {
-    const endpoint = "/api/cart/update/"; 
+  updateCart = data => {
+    const endpoint = "/api/cart/update/";
     const csrfToken = cookie.load("csrftoken");
 
     if (csrfToken !== undefined) {
@@ -64,14 +64,14 @@ class CartForm extends Component {
           "X-CSRFToken": csrfToken
         },
         credentials: "include"
-    };
+      };
       fetch(endpoint, lookupOptions)
         .then(response => {
           return response.json();
         })
         .then(responseData => {
           this.setState({
-            currentCart: responseData.products,
+            currentCart: responseData.products
           });
         })
         .catch(error => {
@@ -81,67 +81,61 @@ class CartForm extends Component {
     }
   };
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     event.preventDefault();
     let data = this.state;
 
-    if (data !== undefined){
-        (
-          this.updateCart(data),
-          console.log(this.state.currentCart)
-        )
+    if (data !== undefined) {
+      this.updateCart(data), console.log(this.state.currentCart);
     } else {
-        ""
+      ("");
     }
   };
 
   defaultState = () => {
-      this.setState({
-        currentPaintingId: [],
-      })
-  }
+    this.setState({
+      currentPaintingId: []
+    });
+  };
 
   componentDidMount() {
     // getting the current painting's ID
     const { paintingId } = this.props;
 
     // getting the items currently in the cart and storing in this.state.currentCart
-    this.getCart()
+    this.getCart();
 
     if (paintingId !== undefined) {
       // putting the current painting id into the currentPaintingId so the cart can associate what painting is being added later
       this.setState({
-        currentPaintingId: [paintingId],
+        currentPaintingId: [paintingId]
       });
     } else {
-      this.defaultState()
+      this.defaultState();
     }
   }
 
   render() {
-
     // Get rid of the remove form cart later
 
-    const {currentCart, currentPaintingId} = this.state
-    const myCart = []
-    currentCart.forEach(function (item) {
-      myCart.push(item.id)
+    const { currentCart, currentPaintingId } = this.state;
+    const myCart = [];
+    currentCart.forEach(function(item) {
+      myCart.push(item.id);
     });
 
     return (
       <form onSubmit={this.handleSubmit}>
-      
-        {
-          myCart.includes(currentPaintingId[0]) ? 
+        {myCart.includes(currentPaintingId[0]) ? (
           <div>
-            <br/>
-            <a>Current painting already in cart</a> 
+            <br />
+            <a>Current painting already in cart</a>
           </div>
-          : 
+        ) : (
           <div>
             <button className="btn btn-primary">Add to cart</button>
           </div>
-        }
+        )}
       </form>
     );
   }

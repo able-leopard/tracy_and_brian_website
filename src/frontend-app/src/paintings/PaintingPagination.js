@@ -1,15 +1,14 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import "../css/PaintingPagination.css";
 
 const PaginationNumbers = props => (
   <a
     className={`page-number${
-        props.currentPage === props.index.pageNumber ? " active" : ""
-      }`}
+      props.currentPage === props.index.pageNumber ? " active" : ""
+    }`}
     onClick={() => {
       props.onPageClick(props.index.apiUrl);
       props.changeCurrentPage(props.index.pageNumber);
-      // console.log(props.index)
     }}
   >
     {props.index.pageNumber}{" "}
@@ -32,8 +31,13 @@ class PaintingPagination extends Component {
     });
   };
 
-  clickNextPage = (currentPage, onPageClick, numberOfPages, currentApiEndpoint) => {
-    const corePaginationEndpoint = currentApiEndpoint.concat('page=');
+  clickNextPage = (
+    currentPage,
+    onPageClick,
+    numberOfPages,
+    currentApiEndpoint
+  ) => {
+    const corePaginationEndpoint = currentApiEndpoint.concat("page=");
     const nextPageApiUrl = corePaginationEndpoint.concat(currentPage + 1);
 
     this.state.currentPage !== numberOfPages
@@ -45,7 +49,7 @@ class PaintingPagination extends Component {
   };
 
   clickPrevPage = (currentPage, onPageClick, currentApiEndpoint) => {
-    const corePaginationEndpoint = currentApiEndpoint.concat('page=');
+    const corePaginationEndpoint = currentApiEndpoint.concat("page=");
     const nextPageApiUrl = corePaginationEndpoint.concat(currentPage - 1);
 
     this.state.currentPage !== 1
@@ -57,17 +61,19 @@ class PaintingPagination extends Component {
   };
 
   render() {
-    // console.log(this.state.currentPage);
+    const {
+      totalItemsCount,
+      onPageClick,
+      currentApiEndpoint,
+      maxItemsPerPage
+    } = this.props;
 
-    const { totalItemsCount, onPageClick, currentApiEndpoint, maxItemsPerPage } = this.props;
-    
     const numberOfPages = totalItemsCount / maxItemsPerPage;
-
 
     // creating an array here where there are two key value pairs in each index.
 
-    //pageNumber is the page number, apiUrl is the Django API link that gets the data from the backend 
-    const corePaginationEndpoint = currentApiEndpoint.concat('page=');
+    //pageNumber is the page number, apiUrl is the Django API link that gets the data from the backend
+    const corePaginationEndpoint = currentApiEndpoint.concat("page=");
     const allPageNumbersArray = [];
     for (let i = 1; i < numberOfPages + 1; i++) {
       allPageNumbersArray.push({
@@ -92,12 +98,15 @@ class PaintingPagination extends Component {
           <a
             className={"page-number"}
             onClick={() => {
-              this.clickPrevPage(this.state.currentPage, onPageClick, currentApiEndpoint);
+              this.clickPrevPage(
+                this.state.currentPage,
+                onPageClick,
+                currentApiEndpoint
+              );
             }}
           >
             ←
           </a>
-
           {firstPageNumber.map(index => (
             <PaginationNumbers
               index={index}
@@ -106,29 +115,24 @@ class PaintingPagination extends Component {
               currentPage={this.state.currentPage}
             />
           ))}
-
           {this.state.currentPage > 4 ? (
             <a className={"page-number"}> ... </a>
           ) : (
             ""
           )}
-
           {displayedMiddlePageNumbers.map(index => (
             <PaginationNumbers
               index={index}
               onPageClick={onPageClick}
               changeCurrentPage={this.changeCurrentPage}
               currentPage={this.state.currentPage}
-
             />
           ))}
-
           {numberOfPages - this.state.currentPage > 3 ? (
             <a className={"page-number"}> ... </a>
           ) : (
             ""
           )}
-
           {lastPageNumber.map(index => (
             <PaginationNumbers
               index={index}
@@ -137,7 +141,6 @@ class PaintingPagination extends Component {
               currentPage={this.state.currentPage}
             />
           ))}
-          
           <a
             className={"page-number"}
             onClick={() => {
@@ -152,10 +155,17 @@ class PaintingPagination extends Component {
             →
           </a>{" "}
         </ul>
-
       </nav>
     );
   }
 }
 
 export default PaintingPagination;
+
+/*
+Pagination examples: 
+
+https://stackoverflow.com/questions/44182132/unique-url-for-pagination-pages-in-react
+https://github.com/gladchinda/build-react-pagination-demo
+
+*/

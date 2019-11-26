@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "whatwg-fetch";
 import cookie from "react-cookies";
 
-import '../css/PaintingForm.css'
+import "../css/PaintingForm.css";
 
 class PaintingPhotoForm extends Component {
   constructor(props) {
@@ -10,11 +10,10 @@ class PaintingPhotoForm extends Component {
     this.state = {
       title: null,
       src: null,
-      apiPaintingPhotosEndpoint: `/api/paintings/photos?`,
-      // paintingPhotos: null,
+      apiPaintingPhotosEndpoint: `/api/paintings/photos?`
     };
   }
-  // Note that id in painting model matches title_id in the paintingphoto model 
+  // Note that id in painting model matches title_id in the paintingphoto model
   // (look at the postgres database if you want to verify)
 
   /* 
@@ -35,62 +34,52 @@ class PaintingPhotoForm extends Component {
   More on formData:
   https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Sending_forms_through_JavaScript#Using_XMLHttpRequest_and_the_FormData_object
 
-  - Understand fetch fully
   */
-  
-  createPainting = (data) => {
 
-    // console.log(data.title)
-    // console.log(data.src)
-
-    const endpoint = "/api/paintings/photos"; //notice the endpoint is going to a relative request, (relative to where the final javascript built code will be)
+  createPainting = data => {
+    const endpoint = "/api/paintings/photos";
     const csrfToken = cookie.load("csrftoken");
 
-    var FD  = new FormData();
+    var FD = new FormData();
 
     if (csrfToken !== undefined) {
-
-      for(name in data) {
+      for (name in data) {
         FD.append(name, data[name]);
       }
     }
-      fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          "X-CSRFToken": csrfToken
-        },
-        body: FD,
-        credentials: "include"
-      })
-        .then(response => {
-          return response.json();
-        })
-        this.clearForm()
-        .catch(error => {
-          console.log("error", error);
-          alert("An error occured, please try again later.");
-        });
-    }
+    fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfToken
+      },
+      body: FD,
+      credentials: "include"
+    }).then(response => {
+      return response.json();
+    });
+    this.clearForm().catch(error => {
+      console.log("error", error);
+      alert("An error occured, please try again later.");
+    });
+  };
 
   updatePainting = data => {
-    const { painting } = this.props;
     const endpoint = `/api/paintings/photos`;
     const csrfToken = cookie.load("csrftoken");
 
     if (csrfToken !== undefined) {
-      // this goes into the options argument in fetch(url, options)
       let lookupOptions = {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
-          "Accept": "multipart/form-data, application/json",
+          Accept: "multipart/form-data, application/json",
           "X-CSRFToken": csrfToken
         },
         body: JSON.stringify(data),
         credentials: "include"
-    };
-  
-    fetch(endpoint, lookupOptions)
+      };
+
+      fetch(endpoint, lookupOptions)
         .then(response => {
           return response.json();
         })
@@ -105,19 +94,17 @@ class PaintingPhotoForm extends Component {
     event.preventDefault();
     let data = this.state;
 
-    const {painting} = this.props
+    const { painting } = this.props;
 
-    if (painting !== undefined){
-        this.updatePainting(data)
+    if (painting !== undefined) {
+      this.updatePainting(data);
     } else {
-        this.createPainting(data)
+      this.createPainting(data);
     }
   };
 
   handleInputChange = event => {
     event.preventDefault();
-    // console.log(event.target.name, event.target.value);
-
     this.setState({
       [event.target.name]: event.target.value
     });
@@ -134,7 +121,6 @@ class PaintingPhotoForm extends Component {
 
   // clearing the form
   clearForm = event => {
-    // console.log(event)
     if (event) {
       event.preventDefault();
     }
@@ -143,22 +129,21 @@ class PaintingPhotoForm extends Component {
   };
 
   defaultState = () => {
-      this.setState({
-          title: null, 
-          src: null,  
-      })
-  }
+    this.setState({
+      title: null,
+      src: null
+    });
+  };
 
   componentDidMount() {
-    // this.loadUniqueTitleIds()
     const { title_id } = this.props;
 
     if (title_id !== undefined) {
       this.setState({
-        title: title_id,
+        title: title_id
       });
     } else {
-      this.defaultState()
+      this.defaultState();
     }
   }
 
@@ -166,32 +151,32 @@ class PaintingPhotoForm extends Component {
     // for the style options remember it has to match with the options in paintings model.py
     // right now the title_id goes in the title field of the PaintingPhoto model. Try to see if we can switch to slug later
 
-
     const { title_id, allPaintings } = this.props;
 
     return (
-      <form onSubmit={this.handleSubmit} ref={(el) => this.paintingCreateForm = el}>
-    
-       <div>
-
+      <form
+        onSubmit={this.handleSubmit}
+        ref={el => (this.paintingCreateForm = el)}
+      >
+        <div>
           <label for="title">Title ID</label>
-          <select id="title"
-                  name="title"
-                  className=""
-                  onChange={this.handleInputChange}
-                  value={title_id}
-                  // required="required"
-                  >
-              <option value="">-</option>
-              {
-                  allPaintings !== null ? 
-                    allPaintings.map((anObjectMapped, index) => 
-                      <option value={anObjectMapped.title} >{anObjectMapped.title_name}</option>
-                      )
-                    : ""
-                  }
+          <select
+            id="title"
+            name="title"
+            className=""
+            onChange={this.handleInputChange}
+            value={title_id}
+            // required="required"
+          >
+            <option value="">-</option>
+            {allPaintings !== null
+              ? allPaintings.map((anObjectMapped, index) => (
+                  <option value={anObjectMapped.title}>
+                    {anObjectMapped.title_name}
+                  </option>
+                ))
+              : ""}
           </select>
-       
         </div>
 
         <div>
@@ -208,7 +193,7 @@ class PaintingPhotoForm extends Component {
             accept=".jpg,.jpeg,.png"
           />
         </div>
-        <button className="btn btn-primary">Save</button> 
+        <button className="btn btn-primary">Save</button>
         <button className={`btn btn-secondary`} onClick={this.clearForm}>
           Clear
         </button>

@@ -1,265 +1,307 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import "../css/PaintingSearchFilter.css";
 
-
 class PaintingSearchFiler extends Component {
-    
-    constructor(props){
-        super(props);
-        this.state = {
-            firstQuery: true,
-            sizeFilters: [],
-            sizeQuery: "",
-            styleFilters: [],
-            styleQuery: "",
-            artistFilters: [],
-            artistQuery: "",
-        }
-    }
-
-    // this concatenate all the search queries into one string and then runs loadPaintings on that string
-    handleAllFilters = (currentApiEndpoint, loadPaintings) => {
-        
-        let sizeQuery = this.state.sizeQuery
-        let artistQuery = this.state.artistQuery
-        let styleQuery = this.state.styleQuery
-
-        let myEndpoint = currentApiEndpoint.concat(sizeQuery, artistQuery, styleQuery)        
-        loadPaintings(myEndpoint);
-    }
-
-    filterQuerySize = (currentApiEndpoint, loadPaintings, event) => {
-
-            let currentFilters = this.state.sizeFilters
-            const { name, value } = event.target;
-            
-            // on each click if the size filter (e.g. large, medium, small) is in the list we take it out, or else we add it in
-            if (currentFilters.includes(value)){
-                let myIndex = currentFilters.indexOf(value)
-                currentFilters.splice(myIndex, 1)
-            }else{
-                currentFilters.push(value)
-            }
-            this.setState({ [name]: currentFilters });
-
-            // we join the list into a string so we can use it in the search queries
-            let myFilters = this.state.sizeFilters.join('')
-
-            // we're storing the sizeQuery into our state which we will use later     
-            if (this.state.sizeFilters.length !== 0) {
-                let myQuery = '&size_class='.concat(myFilters)
-                
-                // using the callback here do run the function after setState
-                // https://stackoverflow.com/questions/34687091/can-i-execute-a-function-after-setstate-is-finished-updating
-                this.setState({
-                    sizeQuery: myQuery
-                }, () => {
-                    this.handleAllFilters(currentApiEndpoint, loadPaintings);
-                });
-            } else {
-                let myQuery = ''
-                this.setState({
-                    sizeQuery: myQuery
-                }, () => {
-                    this.handleAllFilters(currentApiEndpoint, loadPaintings);
-                });    
-            }
+  constructor(props) {
+    super(props);
+    this.state = {
+      firstQuery: true,
+      sizeFilters: [],
+      sizeQuery: "",
+      styleFilters: [],
+      styleQuery: "",
+      artistFilters: [],
+      artistQuery: ""
     };
+  }
 
-    filterStyle = (currentApiEndpoint, loadPaintings, event) => {
+  // this concatenate all the search queries into one string and then runs loadPaintings on that string
+  handleAllFilters = (currentApiEndpoint, loadPaintings) => {
+    let sizeQuery = this.state.sizeQuery;
+    let artistQuery = this.state.artistQuery;
+    let styleQuery = this.state.styleQuery;
 
-        let currentFilters = this.state.styleFilters
-        const { name, value } = event.target;
-        
-        // on each click if the size filter (e.g. large, medium, small) is in the list we take it out, or else we add it in
-        if (currentFilters.includes(value)){
-            let myIndex = currentFilters.indexOf(value)
-            currentFilters.splice(myIndex, 1)
-        }else{
-            currentFilters.push(value)
-        }
-        this.setState({ [name]: currentFilters });
+    let myEndpoint = currentApiEndpoint.concat(
+      sizeQuery,
+      artistQuery,
+      styleQuery
+    );
+    loadPaintings(myEndpoint);
+  };
 
-        // we join the list into a string so we can use it in the search queries
-        let myFilters = this.state.styleFilters.join('')
+  filterQuerySize = (currentApiEndpoint, loadPaintings, event) => {
+    let currentFilters = this.state.sizeFilters;
+    const { name, value } = event.target;
 
-        if (this.state.styleFilters.length !== 0) {
-            let myQuery = '&style='.concat(myFilters)   
-            this.setState({
-                styleQuery: myQuery
-            }, () => {
-                this.handleAllFilters(currentApiEndpoint, loadPaintings);
-            });
-        } else {
-            let myQuery = ''
-            this.setState({
-                styleQuery: myQuery
-            }, () => {
-                this.handleAllFilters(currentApiEndpoint, loadPaintings);
-            });
-        }
-    };
-
-    filterArtist = (currentApiEndpoint, loadPaintings, event) => {
-
-        let currentFilters = this.state.artistFilters
-        const { name, value } = event.target;
-        
-        // on each click if the size filter (e.g. large, medium, small) is in the list we take it out, or else we add it in
-        if (currentFilters.includes(value)){
-            let myIndex = currentFilters.indexOf(value)
-            currentFilters.splice(myIndex, 1)
-        }else{
-            currentFilters.push(value)
-        }
-        this.setState({ [name]: currentFilters });
-
-        // we join the list into a string so we can use it in the search queries
-        let myFilters = this.state.artistFilters.join('')
-
-        if (this.state.artistFilters.length !== 0) {
-            let myQuery = '&artist='.concat(myFilters)   
-            this.setState({
-                artistQuery: myQuery
-            }, () => {
-                this.handleAllFilters(currentApiEndpoint, loadPaintings);
-            });
-        } else {
-            let myQuery = ''
-            this.setState({
-                artistQuery: myQuery
-            }, () => {
-                this.handleAllFilters(currentApiEndpoint, loadPaintings);
-            });
-        }
-    };
-
-
-    render() { 
-        
-        const {currentApiEndpoint, loadPaintings} = this.props;
-
-        return ( 
-            <div>
-                <div className="filter-option">
-                    <div className="filter-item">
-                        SIZE
-                    </div>
-                    <div className="filter-item">
-                        <input  type="checkbox"
-                                value="large|"
-                                name="sizeFilters"
-                                onClick={ (event) => this.filterQuerySize(currentApiEndpoint, loadPaintings, event)}
-                            />
-                        Large
-                    </div>
-                    <div className="filter-item">
-                        <input  type="checkbox"
-                                value="medium|"
-                                name="sizeFilters"                      
-                                onClick={ (event) => this.filterQuerySize(currentApiEndpoint, loadPaintings, event)}
-                                />
-                        Medium
-                    </div>
-                    <div className="filter-item">
-                        <input  type="checkbox"
-                                value="small|"
-                                name="sizeFilters"                                          
-                                onClick={ (event) => this.filterQuerySize(currentApiEndpoint, loadPaintings, event)}
-                                />
-                        Small
-                    </div>
-                </div>
-                <div className="filter-option">
-                    <div className="filter-item">
-                        STYLE
-                    </div>
-                    <div className="filter-item">
-                        <input type="checkbox"
-                            value="abstract|"
-                            name="styleFilters"
-                            onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                            />
-                        Abstract
-                    </div>
-                    <div className="filter-item">
-                        <input  type="checkbox"
-                                value="animal|"
-                                name="styleFilters"                      
-                                onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                                />
-                        Animal
-                    </div>
-                    <div className="filter-item">
-                        <input  type="checkbox"
-                                value="landscape|"
-                                name="styleFilters"                                          
-                                onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                                />
-                        Landscape
-                    </div>
-                    <div className="filter-item">
-                        <input  type="checkbox"
-                                value="nature|"
-                                name="styleFilters"                                          
-                                onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                                />
-                        Nature
-                    </div>
-                    <div className="filter-item">
-                        <input  type="checkbox"
-                                value="people|"
-                                name="styleFilters"                                          
-                                onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                                />
-                        People
-                    </div>
-                    <div className="filter-item">
-                        <input  type="checkbox"
-                                value="portrait|"
-                                name="styleFilters"                                          
-                                onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                                />
-                        Portrait
-                    </div>
-                    <div className="filter-item">
-                    <input  type="checkbox"
-                            value="other|"
-                            name="styleFilters"                                          
-                            onClick={ (event) => this.filterStyle(currentApiEndpoint, loadPaintings, event)}
-                            />
-                        Other
-                    </div>
-                </div>
-                <div className="filter-option">
-                    <div className="filter-item">
-                        ARTIST
-                    </div>
-                    <div className="filter-item">
-                        <input type="checkbox"
-                                value="Brian|"
-                                name="artistFilters"
-                                onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
-                                />
-                        Brian
-                    </div>
-                    <div className="filter-item">
-                        <input  type="checkbox"
-                            value="Tracy|"
-                            name="artistFilters"                      
-                            onClick={ (event) => this.filterArtist(currentApiEndpoint, loadPaintings, event)}
-                            />
-                        Tracy
-                    </div>
-                </div>
-            </div>
-         );
+    // on each click if the size filter (e.g. large, medium, small) is in the list we take it out, or else we add it in
+    if (currentFilters.includes(value)) {
+      let myIndex = currentFilters.indexOf(value);
+      currentFilters.splice(myIndex, 1);
+    } else {
+      currentFilters.push(value);
     }
+    this.setState({ [name]: currentFilters });
+
+    // we join the list into a string so we can use it in the search queries
+    let myFilters = this.state.sizeFilters.join("");
+
+    // we're storing the sizeQuery into our state which we will use later
+    if (this.state.sizeFilters.length !== 0) {
+      let myQuery = "&size_class=".concat(myFilters);
+
+      // using the callback here do run the function after setState
+      // https://stackoverflow.com/questions/34687091/can-i-execute-a-function-after-setstate-is-finished-updating
+      this.setState(
+        {
+          sizeQuery: myQuery
+        },
+        () => {
+          this.handleAllFilters(currentApiEndpoint, loadPaintings);
+        }
+      );
+    } else {
+      let myQuery = "";
+      this.setState(
+        {
+          sizeQuery: myQuery
+        },
+        () => {
+          this.handleAllFilters(currentApiEndpoint, loadPaintings);
+        }
+      );
+    }
+  };
+
+  filterStyle = (currentApiEndpoint, loadPaintings, event) => {
+    let currentFilters = this.state.styleFilters;
+    const { name, value } = event.target;
+
+    // on each click if the size filter (e.g. large, medium, small) is in the list we take it out, or else we add it in
+    if (currentFilters.includes(value)) {
+      let myIndex = currentFilters.indexOf(value);
+      currentFilters.splice(myIndex, 1);
+    } else {
+      currentFilters.push(value);
+    }
+    this.setState({ [name]: currentFilters });
+
+    // we join the list into a string so we can use it in the search queries
+    let myFilters = this.state.styleFilters.join("");
+
+    if (this.state.styleFilters.length !== 0) {
+      let myQuery = "&style=".concat(myFilters);
+      this.setState(
+        {
+          styleQuery: myQuery
+        },
+        () => {
+          this.handleAllFilters(currentApiEndpoint, loadPaintings);
+        }
+      );
+    } else {
+      let myQuery = "";
+      this.setState(
+        {
+          styleQuery: myQuery
+        },
+        () => {
+          this.handleAllFilters(currentApiEndpoint, loadPaintings);
+        }
+      );
+    }
+  };
+
+  filterArtist = (currentApiEndpoint, loadPaintings, event) => {
+    let currentFilters = this.state.artistFilters;
+    const { name, value } = event.target;
+
+    // on each click if the size filter (e.g. large, medium, small) is in the list we take it out, or else we add it in
+    if (currentFilters.includes(value)) {
+      let myIndex = currentFilters.indexOf(value);
+      currentFilters.splice(myIndex, 1);
+    } else {
+      currentFilters.push(value);
+    }
+    this.setState({ [name]: currentFilters });
+
+    // we join the list into a string so we can use it in the search queries
+    let myFilters = this.state.artistFilters.join("");
+
+    if (this.state.artistFilters.length !== 0) {
+      let myQuery = "&artist=".concat(myFilters);
+      this.setState(
+        {
+          artistQuery: myQuery
+        },
+        () => {
+          this.handleAllFilters(currentApiEndpoint, loadPaintings);
+        }
+      );
+    } else {
+      let myQuery = "";
+      this.setState(
+        {
+          artistQuery: myQuery
+        },
+        () => {
+          this.handleAllFilters(currentApiEndpoint, loadPaintings);
+        }
+      );
+    }
+  };
+
+  render() {
+    const { currentApiEndpoint, loadPaintings } = this.props;
+
+    return (
+      <div>
+        <div className="filter-option">
+          <div className="filter-item">SIZE</div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="large|"
+              name="sizeFilters"
+              onClick={event =>
+                this.filterQuerySize(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            Large
+          </div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="medium|"
+              name="sizeFilters"
+              onClick={event =>
+                this.filterQuerySize(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            Medium
+          </div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="small|"
+              name="sizeFilters"
+              onClick={event =>
+                this.filterQuerySize(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            Small
+          </div>
+        </div>
+        <div className="filter-option">
+          <div className="filter-item">STYLE</div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="abstract|"
+              name="styleFilters"
+              onClick={event =>
+                this.filterStyle(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            Abstract
+          </div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="animal|"
+              name="styleFilters"
+              onClick={event =>
+                this.filterStyle(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            Animal
+          </div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="landscape|"
+              name="styleFilters"
+              onClick={event =>
+                this.filterStyle(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            Landscape
+          </div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="nature|"
+              name="styleFilters"
+              onClick={event =>
+                this.filterStyle(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            Nature
+          </div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="people|"
+              name="styleFilters"
+              onClick={event =>
+                this.filterStyle(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            People
+          </div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="portrait|"
+              name="styleFilters"
+              onClick={event =>
+                this.filterStyle(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            Portrait
+          </div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="other|"
+              name="styleFilters"
+              onClick={event =>
+                this.filterStyle(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            Other
+          </div>
+        </div>
+        <div className="filter-option">
+          <div className="filter-item">ARTIST</div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="Brian|"
+              name="artistFilters"
+              onClick={event =>
+                this.filterArtist(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            Brian
+          </div>
+          <div className="filter-item">
+            <input
+              type="checkbox"
+              value="Tracy|"
+              name="artistFilters"
+              onClick={event =>
+                this.filterArtist(currentApiEndpoint, loadPaintings, event)
+              }
+            />
+            Tracy
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default PaintingSearchFiler;
-
-
 
 /* 
 Regarding finding distinct values from reach field:

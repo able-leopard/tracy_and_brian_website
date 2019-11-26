@@ -1,24 +1,20 @@
 import React, { Component } from "react";
 import "whatwg-fetch";
 import cookie from "react-cookies";
-import '../css/GuestEmailForm.css'
-import { Redirect } from 'react-router-dom';
+import "../css/GuestEmailForm.css";
+import { Redirect } from "react-router-dom";
 
 class GuestEmailForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
-      successfulPOST: false,
+      successfulPOST: false
     };
   }
 
-  // either adding or removing the item coming from data into cart send sending it to the REST api
-  // Important to note that the paintingId must be in the products[] before sending the data through or else the backend won't know what to do
-  // this.getCart() also gets called in this
-  updateGuestEmail = (data) => {
-    console.log(data)
-    const endpoint = "/api/account/update/"; 
+  updateGuestEmail = data => {
+    const endpoint = "/api/account/update/";
     const csrfToken = cookie.load("csrftoken");
 
     if (csrfToken !== undefined) {
@@ -36,11 +32,11 @@ class GuestEmailForm extends Component {
           return response.json();
         })
         .then(responseData => {
-          this.setState({email: responseData.email})
+          this.setState({ email: responseData.email });
         })
         .then(responseData => {
           this.setState({
-            successfulPOST: true,
+            successfulPOST: true
           });
         })
         .catch(error => {
@@ -50,7 +46,6 @@ class GuestEmailForm extends Component {
     }
   };
 
-  // getting the items currently in cart placing them in this.state.currentCart
   getGuestEmail = () => {
     const endpoint = `/api/account/`;
     const csrfToken = cookie.load("csrftoken");
@@ -63,14 +58,14 @@ class GuestEmailForm extends Component {
           "X-CSRFToken": csrfToken
         },
         credentials: "include"
-    };
+      };
       fetch(endpoint, lookupOptions)
         .then(response => {
           return response.json();
         })
         .then(responseData => {
           this.setState({
-            email: responseData.email,
+            email: responseData.email
           });
         })
         .catch(error => {
@@ -85,80 +80,69 @@ class GuestEmailForm extends Component {
     this.setState({ [name]: value });
   };
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     event.preventDefault();
     let data = this.state;
 
-    if (data !== undefined){
-        (
-          this.updateGuestEmail(data)
-        )
+    if (data !== undefined) {
+      this.updateGuestEmail(data);
     } else {
-        ""
+      ("");
     }
   };
 
   resetSucessfulPOST = () => {
-      this.setState({
-        successfulPOST: false,
-      })
-  }
+    this.setState({
+      successfulPOST: false
+    });
+  };
 
   tiggerSucessfulPOST = () => {
     this.setState({
-      successfulPOST: true,
-    })
-}
-
+      successfulPOST: true
+    });
+  };
 
   componentDidMount() {
-
-
-    // getting the items currently in the cart and storing in this.state.currentCart
-    this.resetSucessfulPOST()
-    this.getGuestEmail()
-
- 
+    this.resetSucessfulPOST();
+    this.getGuestEmail();
   }
 
   render() {
-
-    const {email, successfulPOST} = this.state
-    console.log(successfulPOST)
+    const { email, successfulPOST } = this.state;
 
     // redirect to shipping page after successful POST of email
-    if (successfulPOST === true)  
-
+    if (successfulPOST === true)
       // remember to use push to or else you lose the history and won't be able to go back to prev page
       // https://stackoverflow.com/questions/47956592/going-back-from-a-redirect-tag-react-router
-      return <Redirect push to={{ pathname: '/checkout/shippingaddress'}} />
-      
+      return <Redirect push to={{ pathname: "/checkout/shippingaddress" }} />;
     else
-
       return (
         <main className="container">
-          <form 
+          <form
             onSubmit={this.handleSubmit}
             className="form-group mt-3 border border-primary rounded shadow-1g p-3"
           >
-                <label>
-                    Guest Email
-                    <input 
-                            className="input-group my-1 p-1 border border-dark my-width"
-                            type="email" 
-                            name="email"
-                            value={email} 
-                            onChange={event => {
-                                this.handleEmailChange(event);
-                              }}
-                            />
-                </label>
-                <br/>
-                <br/>
-                <button className="btn btn-primary border border-dark shadow">Confirm & Continue</button>          
+            <label>
+              Guest Email
+              <input
+                className="input-group my-1 p-1 border border-dark my-width"
+                type="email"
+                name="email"
+                value={email}
+                onChange={event => {
+                  this.handleEmailChange(event);
+                }}
+              />
+            </label>
+            <br />
+            <br />
+            <button className="btn btn-primary border border-dark shadow">
+              Confirm & Continue
+            </button>
           </form>
         </main>
-    );
+      );
   }
 }
 
