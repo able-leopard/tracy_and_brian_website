@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath src t_and_b_website.wsgi --log-file -
+web: python src/manage.py collectstatic --noinput; gunicorn --pythonpath src t_and_b_website.wsgi --log-file -
