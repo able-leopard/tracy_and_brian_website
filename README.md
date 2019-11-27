@@ -8,6 +8,6 @@ E-commerce art website built with React + Django.
 - Files served on AWS S3 Bucket
 - Deployment on Heroku
 
-![GitHub Logo](/images/logo.png)
+![GitHub Logo](react_components_mapping.png)
 Format: ![Alt Text](url)
 
