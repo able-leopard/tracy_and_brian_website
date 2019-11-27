@@ -9,5 +9,5 @@ E-commerce art website built with React + Django.
 - Deployment on Heroku
 
 ![GitHub Logo](react_components_mapping.png)
-Format: ![Alt Text](url)
+
 
