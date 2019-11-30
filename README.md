@@ -12,7 +12,7 @@ E-commerce art website built with React + Django + Django REST Framework.
 
 ![GitHub Logo](Exhibits/react_components_mapping.png)
 
-
+<br/>
 
 ![GitHub Logo](Exhibits/backend_model_relationships.png)
 
