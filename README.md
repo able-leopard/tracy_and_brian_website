@@ -16,6 +16,6 @@ E-commerce art website built with React + Django + Django REST Framework.
 ![GitHub Logo](Exhibits/backend_model_relationships.png)
 
 
-Here is my django session lifecycle mapped out to see when reach of session variables was created and deleted. The sessions helped keep track of the user's cart, shipping & billing information. Majority of the session variables gets deleted after payment is complete.
-
 ![GitHub Logo](Exhibits/session_lifecycle.png)
+
+The sessions helped keep track of the user's cart, shipping & billing information. Majority of the session variables gets deleted after payment is complete.
