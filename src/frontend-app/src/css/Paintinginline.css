@@ -22,6 +22,17 @@
     margin-bottom: 10px;
 };
 
+
+.inline-container > h6 {
+  font-size: 1.2rem;
+}
+
+.inline-container > a {
+  font-size: 0.8rem;
+  margin-top: 0%;
+  margin-bottom: 2%;
+}
+
   /* added additional media query between full size and ipad to scale down each image size in the 4 column list view */
   @media only screen and (max-width: 1600px) and (min-width: 1251px){
     
