@@ -35,6 +35,7 @@ class CheckoutSummary extends Component {
   updateCheckoutSummary = data => {
     const endpoint = "/api/cart/checkout/";
     const csrfToken = cookie.load("csrftoken");
+    cookie.save('csrftoken', csrfToken);
 
     if (csrfToken !== undefined) {
       let lookupOptions = {
@@ -89,6 +90,7 @@ class CheckoutSummary extends Component {
   getOrderSummaryInfo = () => {
     const endpoint = `/api/cart/checkout/`;
     const csrfToken = cookie.load("csrftoken");
+    cookie.save('csrftoken', csrfToken);
 
     if (csrfToken !== undefined) {
       let lookupOptions = {
