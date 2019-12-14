@@ -40,6 +40,7 @@ class StripeCheckoutForm extends Component {
   getOrderSummaryInfo = () => {
     const endpoint = `/api/cart/checkout/`;
     const csrfToken = cookie.load("csrftoken");
+    cookie.save('csrftoken', csrfToken);
 
     if (csrfToken !== undefined) {
       let lookupOptions = {
@@ -117,8 +118,10 @@ class StripeCheckoutForm extends Component {
             : ""
       });
 
-      const csrfToken = cookie.load("csrftoken");
       const endpoint = "/api/cart/checkout/";
+      const csrfToken = cookie.load("csrftoken");
+      cookie.save('csrftoken', csrfToken);
+
 
       if (csrfToken !== undefined) {
         let lookupOptions = {

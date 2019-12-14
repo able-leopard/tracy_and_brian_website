@@ -57,6 +57,7 @@ class CartList extends Component {
   updateCart = data => {
     const endpoint = "/api/cart/update/";
     const csrfToken = cookie.load("csrftoken");
+    cookie.save('csrftoken', csrfToken);
 
     if (csrfToken !== undefined) {
       let lookupOptions = {
@@ -86,6 +87,7 @@ class CartList extends Component {
   getCart = () => {
     const endpoint = `/api/cart/`;
     const csrfToken = cookie.load("csrftoken");
+    cookie.save('csrftoken', csrfToken);
 
     if (csrfToken !== undefined) {
       let lookupOptions = {

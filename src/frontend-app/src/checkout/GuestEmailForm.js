@@ -16,6 +16,7 @@ class GuestEmailForm extends Component {
   updateGuestEmail = data => {
     const endpoint = "/api/account/update/";
     const csrfToken = cookie.load("csrftoken");
+    cookie.save('csrftoken', csrfToken);
 
     if (csrfToken !== undefined) {
       let lookupOptions = {
@@ -49,6 +50,7 @@ class GuestEmailForm extends Component {
   getGuestEmail = () => {
     const endpoint = `/api/account/`;
     const csrfToken = cookie.load("csrftoken");
+    cookie.save('csrftoken', csrfToken);
 
     if (csrfToken !== undefined) {
       let lookupOptions = {

@@ -25,6 +25,7 @@ class ShippingAddressForm extends Component {
   updateAddress = data => {
     const endpoint = "/api/address/update-shipping/";
     const csrfToken = cookie.load("csrftoken");
+    cookie.save('csrftoken', csrfToken);
 
     if (csrfToken !== undefined) {
       let lookupOptions = {
@@ -67,6 +68,7 @@ class ShippingAddressForm extends Component {
   getAddress = () => {
     const endpoint = `/api/address/update-shipping/`;
     const csrfToken = cookie.load("csrftoken");
+    cookie.save('csrftoken', csrfToken);
 
     if (csrfToken !== undefined) {
       let lookupOptions = {

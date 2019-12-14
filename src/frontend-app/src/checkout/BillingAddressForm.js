@@ -26,6 +26,7 @@ class BillingAddressForm extends Component {
   updateAddress = data => {
     const endpoint = "/api/address/update-billing/";
     const csrfToken = cookie.load("csrftoken");
+    cookie.save('csrftoken', csrfToken);
 
     if (csrfToken !== undefined) {
       let lookupOptions = {
@@ -68,6 +69,7 @@ class BillingAddressForm extends Component {
   getAddress = () => {
     const endpoint = `/api/address/update-billing/`;
     const csrfToken = cookie.load("csrftoken");
+    cookie.save('csrftoken', csrfToken);
 
     if (csrfToken !== undefined) {
       let lookupOptions = {
