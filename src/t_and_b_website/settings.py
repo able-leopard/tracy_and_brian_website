@@ -221,7 +221,7 @@ django_heroku.settings(locals())
 # forcing https instead of http
 
 # SECURE_SSL_REDIRECT will be set to false if the env variable is anything other than 'True' (have to do it this way because value needs to be boolean instead of string)
-SECURE_SSL_REDIRECT = (env('SECURE_SSL_REDIRECT_VALUE') == "True")
+# SECURE_SSL_REDIRECT = (env('SECURE_SSL_REDIRECT_VALUE') == "True")
 
 #remember to commend this part out in development model
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
