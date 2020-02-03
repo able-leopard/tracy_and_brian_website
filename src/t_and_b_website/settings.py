@@ -51,9 +51,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # debug will be set to false if the env variable is anything other than 'True' (have to do it this way because value needs to be boolean instead of string)
-# DEBUG = (env('DEBUG_VALUE') == "True")
-
-DEBUG = True
+DEBUG = (env('DEBUG_VALUE') == "True")
 
 ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 't-and-b-website.herokuapp.com', 'http://tracyandbrianart.com/', 'https://tracyandbrianart.com/']
 
@@ -167,7 +165,6 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static-cdn-local')
 
-
 STATIC_URL = '/static/'
 
 # full solution of dealing with the procfile here
@@ -223,7 +220,7 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
 # this has to be commented out during development mode to see the static files
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 # forcing https instead of http
 
