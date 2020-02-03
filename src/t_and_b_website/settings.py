@@ -32,9 +32,12 @@ env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
 )
+
 # reading .env file
 environ.Env.read_env()
 
+
+#BASE_DIR is where manage.py lives
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
@@ -48,7 +51,9 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # debug will be set to false if the env variable is anything other than 'True' (have to do it this way because value needs to be boolean instead of string)
-DEBUG = (env('DEBUG_VALUE') == "True")
+# DEBUG = (env('DEBUG_VALUE') == "True")
+
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 't-and-b-website.herokuapp.com', 'http://tracyandbrianart.com/', 'https://tracyandbrianart.com/']
 
@@ -160,18 +165,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-#BASE_DIR is where manage.py lives
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static-cdn-local')
+
+
 STATIC_URL = '/static/'
 
-# this has to be commented out during development mode
 # full solution of dealing with the procfile here
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'staticfiles'), 
 ]
 
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticfiles')
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #MEDIA_ROOT is for directory for any media that our users upload
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media_cdn')
@@ -216,6 +221,8 @@ AWS_DEFAULT_ACL = None
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+
+# this has to be commented out during development mode to see the static files
 django_heroku.settings(locals())
 
 # forcing https instead of http
