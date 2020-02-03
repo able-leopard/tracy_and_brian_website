@@ -163,17 +163,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static-cdn-local')
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticfiles')
 
 STATIC_URL = '/static/'
 
 # full solution of dealing with the procfile here
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'), 
+    os.path.join(BASE_DIR, 'staticfiles'), 
 ]
 
 
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #MEDIA_ROOT is for directory for any media that our users upload
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media_cdn')
