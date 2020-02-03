@@ -169,7 +169,7 @@ STATIC_URL = '/static/'
 
 # full solution of dealing with the procfile here
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'staticfiles'), 
+    os.path.join(BASE_DIR, 'static'), 
 ]
 
 
