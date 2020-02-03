@@ -169,11 +169,11 @@ STATIC_URL = '/static/'
 
 # full solution of dealing with the procfile here
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'staticfiles'), 
+    os.path.join(BASE_DIR, 'static'), 
 ]
 
 # comment this out on local
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #MEDIA_ROOT is for directory for any media that our users upload
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media_cdn')
