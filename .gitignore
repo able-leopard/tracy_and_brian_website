@@ -2,8 +2,8 @@
 /src/cart/stripe_api_key.py
 
 #staticfiles
-/staticfiles
-/src/staticfiles
+# /staticfiles
+# /src/staticfiles
 
 
 # Django #
