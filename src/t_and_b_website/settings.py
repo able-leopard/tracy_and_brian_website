@@ -171,7 +171,7 @@ STATIC_URL = '/static/'
 # ]
 
 # comment this out on local
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #MEDIA_ROOT is for directory for any media that our users upload
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media_cdn')
@@ -222,7 +222,7 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
 # this has to be commented out during development mode to see the static files
-# django_heroku.settings(locals())
+django_heroku.settings(locals())
 
 # forcing https instead of http
 
