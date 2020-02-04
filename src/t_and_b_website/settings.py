@@ -20,7 +20,6 @@ Things to change in production vs development:
 * Remember all the environment variables are set via the .env file in development and set via heroku config when in production
 """
 
-
 import os
 import environ
 import django_heroku 
@@ -53,8 +52,7 @@ SECRET_KEY = env('SECRET_KEY')
 # debug will be set to false if the env variable is anything other than 'True' (have to do it this way because value needs to be boolean instead of string)
 DEBUG = (env('DEBUG_VALUE') == "True")
 
-ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 't-and-b-website.herokuapp.com', 'http://tracyandbrianart.com/', 'https://tracyandbrianart.com/']
-
+ALLOWED_HOSTS = ['127.0.0.1', 'testserver', 'mytracyandbrianapp.herokuapp.com', 't-and-b-website.herokuapp.com', 'http://tracyandbrianart.com/', 'https://tracyandbrianart.com/']
 
 # Application definition
 INSTALLED_APPS = [
@@ -207,14 +205,18 @@ JWT_AUTH = {
 # django storages documentation:
 # https://django-storages.readthedocs.io/en/latest/
 
+
 STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+
 
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
 
+
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
+
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
