@@ -21,7 +21,7 @@ Things to change in production vs development:
 """
 
 import os
-from os import environ
+import environ
 import django_heroku 
 
 # reading env files documentation:
