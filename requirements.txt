@@ -21,7 +21,7 @@ jmespath==0.9.4
 phonenumbers==8.10.23
 Pillow==6.1.0
 psycopg2==2.8.3
-PyJWT==1.7.1
+PyJWT==2.4.0
 python-dateutil==2.8.0
 pytz==2018.4
 requests==2.22.0
